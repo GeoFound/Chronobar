@@ -42,23 +42,7 @@
 - **限制**：不能直接访问核心交易逻辑，只能通过 UI Bridge
 - **适用场景**：自定义面板、第三方工具集成、特殊可视化需求
 
-### 3.5 AI 智能体插件 (ai-agent)
-
-- **权限**：通过 HostAPI 与核心交互，受同等权限模型约束
-- **能力**：
-  - AI Copilot：自然语言生成策略代码骨架
-  - AI 信号插件：LLM Alpha 因子生成、情感分析、市场状态分类
-  - AI 回测分析师：智能回测报告生成
-  - AI 风控增强：异常行为检测、微结构异常识别
-  - AI 自动调参：超参数优化 Agent
-- **限制**：
-  - 必须通过 HostAPI 与核心交互，不能绕过风控直接操盘
-  - AI 风控检查器只能发出 RISK_BLOCKED/RISK_WARNING 事件，不能直接操作仓位
-  - LLM API Key 权限受限、最大 token 消耗限制、超时限制
-  - AI 输出必须通过类型检查门槛才能进入系统
-- **适用场景**：策略研究助手、智能信号生成、回测分析、风控增强、参数优化
-
-**核心原则：** AI 作为 Copilot（增强人类决策），而非替代人类。全自动 AI 操盘不建议作为核心功能，以符合监管合规要求和风险控制原则。
+**注：** AI 智能体插件（ai-agent）的详细协议定义请参考 [`docs/core/ai_protocol.md`](ai_protocol.md)
 
 ## 4. 插件目录结构
 
@@ -181,41 +165,9 @@ plugin_name/
 }
 ```
 
-### 5.5 AI 智能体插件 manifest
+**注：** AI 智能体插件（ai-agent）的 manifest 示例请参考 [`docs/core/ai_protocol.md`](ai_protocol.md) 第 4 节。
 
-```json
-{
-  "name": "llm_sentiment_signal",
-  "version": "1.0.0",
-  "api_version": "1.2",
-  "kind": "ai-agent",
-  "entry": "plugin.py",
-  "ai_capabilities": ["sentiment", "regime"],
-  "permissions": {
-    "read_market_data": true,
-    "emit_alert": true,
-    "write_file": false,
-    "read_workspace": false,
-    "call_external_api": true
-  },
-  "ai_config": {
-    "model_provider": "local",
-    "max_tokens": 1024,
-    "timeout": 10
-  },
-  "compatibility": {
-    "min_core_version": "1.2",
-    "max_core_version": "1.x"
-  }
-}
-```
-
-**说明：**
-- `ai_capabilities`：AI 插件具备的能力列表（sentiment、regime、factor、anomaly）
-- `permissions.call_external_api`：AI 插件独有的网络外呼权限，用于调用 LLM API
-- `ai_config`：AI 模型配置（模型提供商、最大 token、超时时间）
-
-### 5.6 依赖加载策略
+### 5.5 依赖加载策略
 
 **depends_on 字段处理：**
 
@@ -277,7 +229,7 @@ class PluginContext(Protocol):
 - **read_position**：读取持仓（策略专用，需用户授权）
 - **read_account**：读取账户（策略专用，需用户授权）
 - **read_open_orders**：读取未成交委托（策略专用，需用户授权）
-- **call_external_api**：调用外部 API（ai-agent 专用，需用户授权）
+- **call_external_api**：调用外部 API（ai-agent 专用，需用户授权，详见 [`docs/core/ai_protocol.md`](ai_protocol.md)）
 
 ### 8.2 默认权限原则
 
