@@ -23,6 +23,7 @@ from core.enums import (
 @dataclass(slots=True)
 class Tick:
     """Tick data from market gateway."""
+
     gateway_name: str
     exchange: str
     symbol: str
@@ -45,6 +46,7 @@ class Tick:
 @dataclass(slots=True)
 class Bar:
     """Bar data aggregated from ticks."""
+
     gateway_name: str
     exchange: str
     symbol: str
@@ -69,6 +71,7 @@ class Bar:
 @dataclass(slots=True)
 class Instrument:
     """Instrument information."""
+
     exchange: str
     product_id: str
     instrument_id: str
@@ -87,6 +90,7 @@ class Instrument:
 @dataclass(slots=True)
 class SessionContext:
     """Trading session context."""
+
     session_id: str
     exchange: str
     product_id: str
@@ -102,6 +106,7 @@ class SessionContext:
 @dataclass(slots=True)
 class Order:
     """Order information."""
+
     order_id: str
     gateway_name: str
     exchange: str
@@ -127,6 +132,7 @@ class Order:
 @dataclass(slots=True)
 class Trade:
     """Trade information."""
+
     trade_id: str
     order_id: str
     gateway_name: str
@@ -148,6 +154,7 @@ class Trade:
 @dataclass(slots=True)
 class Position:
     """Position information."""
+
     gateway_name: str
     exchange: str
     symbol: str
@@ -168,6 +175,7 @@ class Position:
 @dataclass(slots=True)
 class Account:
     """Account information."""
+
     gateway_name: str
     account_id: str
     balance: float
@@ -185,6 +193,7 @@ class Account:
 @dataclass(slots=True)
 class OrderRequest:
     """Order request."""
+
     gateway_name: str
     exchange: str
     symbol: str
@@ -203,6 +212,7 @@ class OrderRequest:
 @dataclass(slots=True)
 class CancelRequest:
     """Cancel order request."""
+
     gateway_name: str
     order_id: str
     gateway_order_id: str | None = None
@@ -213,6 +223,7 @@ class CancelRequest:
 @dataclass(slots=True)
 class RiskCheckResult:
     """Risk check result."""
+
     passed: bool
     check_type: RiskCheckType
     block_reason: str | None = None
@@ -224,6 +235,7 @@ class RiskCheckResult:
 @dataclass(slots=True)
 class AISignal:
     """AI-generated signal."""
+
     signal_id: str
     signal_type: SignalType
     source: str
@@ -238,6 +250,7 @@ class AISignal:
 @dataclass(slots=True)
 class SentimentScore:
     """Sentiment analysis score."""
+
     instrument_id: str
     source: str
     sentiment: Sentiment
@@ -250,6 +263,7 @@ class SentimentScore:
 @dataclass(slots=True)
 class RegimeLabel:
     """Market regime label."""
+
     instrument_id: str | None
     regime: Regime
     confidence: float

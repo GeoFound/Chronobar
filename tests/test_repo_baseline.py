@@ -59,8 +59,7 @@ def test_default_configs_validate_against_schemas() -> None:
         validator = Draft202012Validator(_load_json(schema_path))
         errors = sorted(validator.iter_errors(_load_yaml(config_path)), key=lambda item: item.path)
         assert not errors, (
-            f"{config_path} failed schema validation: "
-            f"{[error.message for error in errors]}"
+            f"{config_path} failed schema validation: " f"{[error.message for error in errors]}"
         )
 
 

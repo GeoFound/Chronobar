@@ -5,6 +5,7 @@ from enum import Enum
 
 class SessionType(str, Enum):
     """Trading session types."""
+
     MORNING = "morning"
     AFTERNOON = "afternoon"
     NIGHT = "night"
@@ -12,6 +13,7 @@ class SessionType(str, Enum):
 
 class Interval(str, Enum):
     """Bar interval types."""
+
     TICK = "tick"
     S1 = "1s"
     M1 = "1m"
@@ -25,6 +27,7 @@ class Interval(str, Enum):
 
 class OrderType(str, Enum):
     """Order types."""
+
     LIMIT = "limit"
     MARKET = "market"
     STOP = "stop"
@@ -35,12 +38,14 @@ class OrderType(str, Enum):
 
 class Direction(str, Enum):
     """Order direction."""
+
     LONG = "long"
     SHORT = "short"
 
 
 class Offset(str, Enum):
     """Order offset."""
+
     OPEN = "open"
     CLOSE = "close"
     CLOSE_TODAY = "close_today"
@@ -49,6 +54,7 @@ class Offset(str, Enum):
 
 class OrderStatus(str, Enum):
     """Order status."""
+
     SUBMITTING = "submitting"
     SUBMITTED = "submitted"
     ACCEPTED = "accepted"
@@ -61,6 +67,7 @@ class OrderStatus(str, Enum):
 
 class CancelReasonCode(str, Enum):
     """Order cancellation reason codes."""
+
     TIMEOUT = "timeout"
     REJECTED_BY_USER = "rejected_by_user"
     REJECTED_BY_RISK = "rejected_by_risk"
@@ -71,6 +78,7 @@ class CancelReasonCode(str, Enum):
 
 class TimeInForce(str, Enum):
     """Order time in force."""
+
     GTC = "GTC"
     IOC = "IOC"
     FOK = "FOK"
@@ -79,6 +87,7 @@ class TimeInForce(str, Enum):
 
 class RiskCheckType(str, Enum):
     """Risk check types."""
+
     POSITION_LIMIT = "position_limit"
     ORDER_LIMIT = "order_limit"
     MARGIN_CHECK = "margin_check"
@@ -89,6 +98,7 @@ class RiskCheckType(str, Enum):
 
 class SignalType(str, Enum):
     """AI signal types."""
+
     SENTIMENT = "sentiment"
     REGIME = "regime"
     FACTOR = "factor"
@@ -97,6 +107,7 @@ class SignalType(str, Enum):
 
 class Sentiment(str, Enum):
     """Sentiment classification."""
+
     POSITIVE = "positive"
     NEGATIVE = "negative"
     NEUTRAL = "neutral"
@@ -104,6 +115,7 @@ class Sentiment(str, Enum):
 
 class Regime(str, Enum):
     """Market regime classification."""
+
     TREND = "trend"
     RANGE = "range"
     HIGH_VOLATILITY = "high_volatility"
