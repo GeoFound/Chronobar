@@ -1,0 +1,214 @@
+# README Architecture Overview
+
+## 1. 文档目的
+
+本文件用于快速说明中国期货专用平台的架构文档体系，帮助开发者、协作者和 AI 辅助工具在进入编码前，先理解系统边界、模块职责、协议关系和开发顺序。
+
+如果把整个平台看成一个长期演进的产品，那么这 7 份文档并不是彼此独立的说明书，而是一套相互咬合的正式基线：
+- `system/architecture.md`
+- `core/data_protocol.md`
+- `core/event_protocol.md`
+- `system/config_protocol.md`
+- `core/plugin_protocol.md`
+- `engineering/engineering_baseline.md`
+- `system/ui_bridge_protocol.md`
+
+建议任何人在开始修改代码、补功能、重构模块或生成新文件之前，先通读本 README，再按推荐顺序阅读对应文档。
+
+---
+
+## 2. 7 份文档分别解决什么问题
+
+### `system/architecture.md`
+回答“系统怎么分层、模块怎么协作、依赖方向怎么约束”的问题。  
+它定义七层架构、主引擎协调模式、实时 / 回放主流程，以及哪些跨层依赖是允许的、哪些是禁止的。
+
+### `core/data_protocol.md`
+回答“系统内部到底交换什么对象”的问题。  
+它定义 Tick、Bar、Instrument、SessionContext 等标准对象，是接口层、规则层、计算层、展示层、插件层之间的共同语言。
+
+### `core/event_protocol.md`
+回答“模块之间默认怎么通信”的问题。  
+它定义 EventEnvelope、标准事件类型、订阅规则、失败处理和回放一致性要求，是系统默认协作总线的正式约束。
+
+### `system/config_protocol.md`
+回答“系统配置怎么组织、怎么校验、怎么迁移”的问题。  
+它定义系统配置、市场配置、规则配置、指标配置、工作区配置，以及 schema 校验和 migration 规则。
+
+### `core/plugin_protocol.md`
+回答“扩展能力怎么接入、权限怎么控制、输出怎么进入系统”的问题。  
+它定义插件目录结构、生命周期、manifest、Host API、权限模型和输出契约。
+
+### `engineering/engineering_baseline.md`
+回答“代码仓库怎么组织、质量门槛是什么、什么才算可交付”的问题。  
+它定义目录结构、测试要求、类型检查、日志要求、开发顺序、里程碑和 AI 协作约束。
+
+### `system/ui_bridge_protocol.md`
+回答“React 前端如何和 Python 核心协作”的问题。  
+它定义 Query API、Command API、Subscription API，以及前端状态同步、错误模型和订阅恢复策略。
+
+---
+
+## 3. 这些文档之间是什么关系
+
+可以把这 7 份文档理解成 3 层：
+
+### 第一层：最稳定的核心协议层
+- `core/data_protocol.md`
+- `core/event_protocol.md`
+- `core/plugin_protocol.md`
+
+这一层定义系统最核心的交换边界。  
+如果这层不稳定，计算链路、回放链路、插件链路和展示链路都会反复返工。
+
+### 第二层：系统组织与接入层
+- `system/architecture.md`
+- `system/config_protocol.md`
+- `system/ui_bridge_protocol.md`
+
+这一层定义模块如何组合、配置如何进入系统、前端如何访问核心。  
+它们建立的是“系统运行方式”，而不是某个具体功能的实现细节。
+
+### 第三层：工程执行与落地层
+- `engineering/engineering_baseline.md`
+
+这一层把前两层文档变成真正可执行的工程规则。  
+它决定仓库怎么搭、测试怎么补、类型怎么检查、交付怎么验收。
+
+---
+
+## 4. 推荐阅读顺序
+
+如果你是第一次接手这个项目，建议按下面顺序阅读：
+
+1. `system/architecture.md`  
+先看整体骨架，知道系统分几层、主流程怎么走、哪些依赖不能碰。
+
+2. `core/data_protocol.md`  
+再看标准对象，因为后面所有模块几乎都要依赖这些对象。
+
+3. `core/event_protocol.md`  
+接着看事件模型，理解系统默认协作方式。
+
+4. `system/config_protocol.md`  
+然后看配置如何进入系统，哪些字段可变、哪些字段要迁移。
+
+5. `core/plugin_protocol.md`  
+再看扩展能力如何接入，避免把插件写成绕过核心的“外挂脚本”。
+
+6. `system/ui_bridge_protocol.md`  
+如果要做前端、工作区、图表或交互，就必须读这份，明确前后端边界。
+
+7. `engineering/engineering_baseline.md`  
+最后看工程约束，确认目录结构、测试门槛、交付标准和 AI 协作要求。
+
+---
+
+## 5. 一张图理解文档协作关系
+
+```text
+system/architecture.md
+ ├── 规定系统分层、依赖方向、主流程
+ ├── 依赖 core/data_protocol.md 提供标准对象
+ ├── 依赖 core/event_protocol.md 提供事件协作模型
+ ├── 依赖 system/config_protocol.md 提供配置装载边界
+ ├── 依赖 core/plugin_protocol.md 提供插件接入边界
+ └── 依赖 system/ui_bridge_protocol.md 提供前后端桥接边界
+
+core/data_protocol.md
+ └── 定义系统通用标准对象
+
+core/event_protocol.md
+ └── 定义系统默认协作总线
+
+system/config_protocol.md
+ └── 定义系统配置输入、校验与迁移规则
+
+core/plugin_protocol.md
+ └── 定义扩展能力接入方式
+
+system/ui_bridge_protocol.md
+ └── 定义 React 展示层与 Python 核心的交互边界
+
+engineering/engineering_baseline.md
+ └── 把以上所有文档转化为仓库结构、测试门槛与交付标准
+```
+
+---
+
+## 6. 开发时应该怎么使用这套文档
+
+### 新增核心功能
+先看 `system/architecture.md` 判断功能属于哪一层，再看 `core/data_protocol.md` 和 `core/event_protocol.md` 判断是否需要新增标准对象或事件类型。
+
+### 新增配置项
+先改 `system/config_protocol.md`，明确字段位置、默认值、覆盖关系和迁移要求，然后再写 loader、schema 和测试。
+
+### 新增插件
+先按 `core/plugin_protocol.md` 设计 manifest、schema、权限和 outputs，禁止直接把插件写成随意调用核心对象的脚本。
+
+### 改前端体验
+先看 `system/ui_bridge_protocol.md`，确认查询、命令、订阅边界，再决定 React 页面状态、工作区布局和图表联动的实现方式。
+
+### 落代码和提测
+最后回到 `engineering/engineering_baseline.md`，确认目录放置、测试补齐、类型检查和交付门槛都满足要求。
+
+---
+
+## 7. 最重要的几条共识
+
+- 平台优先依赖正式协议，不依赖口头约定。
+- 默认协作通道是事件总线，不是跨层直连。
+- 展示层只消费标准结果，不直接依赖网关私有字段。
+- 插件是受控扩展单元，不是任意脚本入口。
+- 配置必须可迁移，回放必须可复验，日志必须可追踪。
+- React 前端体验可以持续升级，但不能反向污染核心边界。
+
+---
+
+## 8. 第一阶段最小落地建议
+
+如果要从零开始推进第一阶段，建议最小落地顺序为：
+
+1. 先定稿 `core/data_protocol.md`、`core/event_protocol.md`、`core/plugin_protocol.md`
+2. 再定稿 `system/architecture.md`、`system/config_protocol.md`、`system/ui_bridge_protocol.md`
+3. 最后按 `engineering/engineering_baseline.md` 搭仓库、补 schema、补测试、建最小闭环
+
+第一阶段的目标不是把所有界面都做漂亮，而是先跑通这条主链路：
+
+`Tick -> Event -> Rule -> Bar -> Indicator Plugin -> UiBridge -> React Chart -> Replay`
+
+只要这条链路跑通，并且回放与实时结果一致，这个平台就具备第一版架构骨架。
+
+---
+
+## 9. 给新加入同学的建议
+
+如果你只负责前端，请至少阅读：
+- `system/architecture.md`
+- `core/event_protocol.md`
+- `system/config_protocol.md`
+- `system/ui_bridge_protocol.md`
+
+如果你只负责核心计算，请至少阅读：
+- `system/architecture.md`
+- `core/data_protocol.md`
+- `core/event_protocol.md`
+- `engineering/engineering_baseline.md`
+
+如果你负责插件体系，请至少阅读：
+- `core/plugin_protocol.md`
+- `core/event_protocol.md`
+- `core/data_protocol.md`
+- `engineering/engineering_baseline.md`
+
+如果你负责整体推进，请 7 份全部阅读，并以本 README 作为总索引。
+
+---
+
+## 10. 维护原则
+
+本 README 不是详细协议文档，不承载字段级定义，也不替代正式协议。  
+它只负责回答一个问题：**当你面对整套架构文档时，应该先看什么、每份文档负责什么、它们之间怎么协作。**
+
+当任何正式协议发生结构变化时，本 README 也必须同步更新。
