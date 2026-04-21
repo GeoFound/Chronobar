@@ -64,6 +64,10 @@ futures_platform/
     loader.py
     sandbox.py
     builtins/
+  strategy/
+    host_api.py
+    context.py
+    base_strategy.py
   ui/
     desktop/
       app_shell/
