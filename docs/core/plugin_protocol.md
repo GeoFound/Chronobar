@@ -277,6 +277,7 @@ class PluginContext(Protocol):
 - **read_position**：读取持仓（策略专用，需用户授权）
 - **read_account**：读取账户（策略专用，需用户授权）
 - **read_open_orders**：读取未成交委托（策略专用，需用户授权）
+- **call_external_api**：调用外部 API（ai-agent 专用，需用户授权）
 
 ### 8.2 默认权限原则
 

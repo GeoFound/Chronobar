@@ -223,7 +223,7 @@ def migrate_config(data: dict, from_version: str, to_version: str) -> dict: ...
           "type": "object",
           "properties": {
             "enabled": {"type": "boolean"},
-            "model_provider": {"type": "string"},
+            "model_provider": {"type": "string", "enum": ["local", "deepseek", "openai", "anthropic"]},
             "local_model_path": {"type": "string"},
             "api_endpoint": {"type": "string"},
             "api_key": {"type": "string"},
