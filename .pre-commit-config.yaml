@@ -19,4 +19,7 @@ repos:
       - id: mypy
         additional_dependencies:
           - types-requests
-        args: [--config-file=pyproject.toml, core/]
+          - types-PyYAML
+          - types-jsonschema
+        args: [--config-file=pyproject.toml, --no-incremental]
+        pass_filenames: false
