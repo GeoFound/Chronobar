@@ -13,7 +13,7 @@
 
 ## 变更内容
 <!-- 列出本次变更涉及的文件和模块 -->
-- 
+-
 
 ## 协议影响
 <!-- 如涉及协议文档变更，请说明受影响的协议章节 -->
@@ -28,7 +28,7 @@
 - [ ] `docs/system/architecture.md` - Architecture
 - [ ] `docs/system/config_protocol.md` - Config Protocol
 - [ ] `docs/system/ui_bridge_protocol.md` - UI Bridge Protocol
-- [ ] None (no protocol changes) 
+- [ ] None (no protocol changes)
 
 ## 关联 Issue
 <!-- 如有，请关联相关的 Issue -->

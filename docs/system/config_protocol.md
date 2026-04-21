@@ -45,11 +45,11 @@ system:
   replay_dir: "./data/replay"
   bridge:
     host: "127.0.0.1"
-    port: 18777
+    port: 18080
     query_protocol: "http"
     command_protocol: "http"
     subscription_protocol: "websocket"
-    subscription_port: 18778
+    subscription_port: 18081
   ai:
     enabled: false
     model_provider: "local"  // enum[local, deepseek, openai, anthropic]

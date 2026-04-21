@@ -5,6 +5,16 @@ This document tracks version changes across all protocol documents, following [K
 ## [Unreleased]
 
 ### Added
+- M1 baseline repository artifacts:
+  - Added `pyproject.toml` with Python, pytest, ruff, and mypy baseline configuration
+  - Added `.pre-commit-config.yaml` and `.github/workflows/ci.yml`
+  - Added `config/defaults/*.yaml` example configuration files
+  - Added `config/schemas/*.json` JSON Schema baseline files
+  - Added `tests/test_repo_baseline.py` and `tests/ui_contract/*.json` contract samples
+  - Added `.github/CODEOWNERS`, `docs/getting_started_for_contributors.md`, and `examples/README.md`
+  - Added `ai-instructions.md`, `AGENTS.md`, `justfile`, and `.envrc` to satisfy workstation SOP governance requirements
+  - Added `tests/test_docs_links.py` for repository-local markdown link validation
+  - Added `uv.lock` as the repository lockfile for uv-based local and CI workflows
 - Documentation architecture improvements:
   - Created `docs/decisions/` ADR directory with storage architecture decision record
   - Created `docs/glossary.md` with unified terminology
@@ -14,6 +24,12 @@ This document tracks version changes across all protocol documents, following [K
 - GitHub Issue templates for bug reports and feature requests
 
 ### Changed
+- Unified M1 wording across `README.md`, `docs/CONTRIBUTING.md`, `docs/roadmap.md`, and `docs/engineering/m1_checklist.md` to mean docs + config/schema + baseline validation, not runtime completion
+- Aligned `docs/system/config_protocol.md` bridge port examples with `docs/system/ui_bridge_protocol.md`
+- Fixed roadmap version references for `config_protocol.md` and `ui_bridge_protocol.md`
+- Fixed the LICENSE relative link in `docs/CONTRIBUTING.md`
+- Updated `docs/engineering/engineering_baseline.md` dependency baseline to include YAML and JSON Schema tooling
+- Strengthened markdown lint coverage to validate heading slug uniqueness and fragment anchor resolution
 - README layer naming to use Contracts/Architecture/Engineering Standards instead of Chinese layer names
 - Comparison table data接入 entry to be more specific and honest (国内主流期货 API（计划）)
 - Core principles table to fix duplicate text

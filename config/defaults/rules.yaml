@@ -1,0 +1,22 @@
+rules:
+  calendars:
+    cn_futures:
+      timezone: "Asia/Shanghai"
+      holiday_source: "local"
+  session_templates:
+    SHFE_A_NIGHT_2300:
+      exchange: "SHFE"
+      trading_date_rule: "night_belongs_next_trading_date"
+      segments:
+        - type: "morning"
+          start: "09:00"
+          end: "10:15"
+        - type: "morning"
+          start: "10:30"
+          end: "11:30"
+        - type: "afternoon"
+          start: "13:30"
+          end: "15:00"
+        - type: "night"
+          start: "21:00"
+          end: "23:00"

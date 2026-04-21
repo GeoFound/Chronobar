@@ -486,6 +486,8 @@ pyarrow>=14.0,<15
 orjson>=3.9,<4
 typing-extensions>=4.9,<5
 tenacity>=8.2,<9
+pyyaml>=6.0,<7
+jsonschema>=4.21,<5
 ```
 
 ### 13.3 Dev 必选依赖
@@ -499,7 +501,7 @@ mypy
 pre-commit
 ```
 
-### 12.4 可选扩展
+### 13.4 可选扩展
 
 按阶段启用：
 
@@ -511,7 +513,7 @@ openctp-ctp
 apscheduler
 ```
 
-### 12.5 依赖管理原则
+### 13.5 依赖管理原则
 
 - Runtime 依赖必须显式列出
 - Dev 依赖单独分组

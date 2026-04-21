@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "data": {
+    "workspace_id": "default",
+    "theme": "dark",
+    "watchlist": ["rb2509", "i2509", "ag2506"]
+  },
+  "trace_id": "trace-query-001"
+}

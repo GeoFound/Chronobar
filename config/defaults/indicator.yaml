@@ -1,0 +1,11 @@
+indicator:
+  ma_01:
+    type: "moving_average"
+    enabled: true
+    input: "close"
+    window: 20
+    continuity: "segmented"
+    session_scope: "current_session"
+    style:
+      color: "#ffcc00"
+      width: 2

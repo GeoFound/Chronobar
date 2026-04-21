@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/market.schema.json",
+  "title": "MarketConfig",
+  "type": "object",
+  "required": ["market"],
+  "properties": {
+    "market": {
+      "type": "object",
+      "required": ["gateways", "exchanges"],
+      "properties": {
+        "gateways": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "required": ["type", "md_front", "td_front", "broker_id", "auth_code", "app_id"],
+            "properties": {
+              "type": { "type": "string" },
+              "md_front": { "type": "string" },
+              "td_front": { "type": "string" },
+              "broker_id": { "type": "string" },
+              "auth_code": { "type": "string" },
+              "app_id": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "exchanges": {
+          "type": "object",
+          "required": ["SHFE", "DCE", "CZCE", "INE", "CFFEX"],
+          "properties": {
+            "SHFE": { "type": "object", "additionalProperties": false },
+            "DCE": { "type": "object", "additionalProperties": false },
+            "CZCE": { "type": "object", "additionalProperties": false },
+            "INE": { "type": "object", "additionalProperties": false },
+            "CFFEX": { "type": "object", "additionalProperties": false }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

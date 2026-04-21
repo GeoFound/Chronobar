@@ -456,15 +456,15 @@ class BacktestEngine:
         self.orders: dict[str, Order] = {}
         self.trades: list[Trade] = []
         self.equity_curve: list[dict[str, Any]] = []
-    
+
     def load_data(self, config: BacktestConfig) -> None:
         # 从数据源加载历史数据
         pass
-    
+
     def run(self, config: BacktestConfig) -> BacktestResult:
         self.config = config
         self.load_data(config)
-        
+
         # 初始化账户
         self.account = Account(
             gateway_name="backtest",
@@ -479,18 +479,18 @@ class BacktestEngine:
             datetime=datetime.now(),
             trading_date=config.start_date
         )
-        
+
         # 初始化策略
         self.strategy = load_strategy(config.strategy_id)
         self.strategy.on_init(StrategyContext(...))
-        
+
         # 执行回测
         for data_point in self.data:
             self._process_data_point(data_point)
-        
+
         # 计算结果
         return self._calculate_result()
-    
+
     def _process_data_point(self, data_point: Tick | Bar) -> None:
         # 推进时间
         # 触发策略回调
@@ -498,7 +498,7 @@ class BacktestEngine:
         # 更新持仓和账户
         # 记录资金曲线
         pass
-    
+
     def _calculate_result(self) -> BacktestResult:
         # 计算性能指标
         pass

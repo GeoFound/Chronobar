@@ -148,7 +148,7 @@ class AIRiskChecker:
     def check(self, context: dict) -> RiskCheckResult:
         """
         执行 AI 风控检查
-        
+
         返回：
         - RiskCheckResult(check_type="ai", passed=True/False, message="...")
         """
@@ -304,4 +304,4 @@ class LLMProvider(Protocol):
 - [`docs/core/event_protocol.md`](event_protocol.md)：AI 事件类型（EVENT_AI_SIGNAL、EVENT_REGIME_CHANGE）
 - [`docs/core/risk_protocol.md`](risk_protocol.md)：AI 风控检查器接口
 - [`docs/core/backtest_protocol.md`](backtest_protocol.md)：AI 回测分析师集成
-- [`docs/system/config_protocol.md`](config_protocol.md)：AI 系统配置
+- [`../system/config_protocol.md`](../system/config_protocol.md)：AI 系统配置

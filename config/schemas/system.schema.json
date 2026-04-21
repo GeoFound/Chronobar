@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/system.schema.json",
+  "title": "SystemConfig",
+  "type": "object",
+  "required": ["system"],
+  "properties": {
+    "system": {
+      "type": "object",
+      "required": [
+        "version",
+        "app_name",
+        "timezone",
+        "log_level",
+        "cache_dir",
+        "db_url",
+        "ui_backend",
+        "replay_dir",
+        "bridge",
+        "ai"
+      ],
+      "properties": {
+        "version": { "type": "string" },
+        "app_name": { "type": "string" },
+        "timezone": { "type": "string" },
+        "log_level": { "type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR"] },
+        "cache_dir": { "type": "string" },
+        "db_url": { "type": "string" },
+        "ui_backend": { "type": "string", "const": "react-desktop" },
+        "replay_dir": { "type": "string" },
+        "bridge": {
+          "type": "object",
+          "required": [
+            "host",
+            "port",
+            "query_protocol",
+            "command_protocol",
+            "subscription_protocol",
+            "subscription_port"
+          ],
+          "properties": {
+            "host": { "type": "string" },
+            "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+            "query_protocol": { "type": "string", "enum": ["http"] },
+            "command_protocol": { "type": "string", "enum": ["http"] },
+            "subscription_protocol": { "type": "string", "enum": ["websocket"] },
+            "subscription_port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+          },
+          "additionalProperties": false
+        },
+        "ai": {
+          "type": "object",
+          "required": [
+            "enabled",
+            "model_provider",
+            "local_model_path",
+            "api_endpoint",
+            "api_key",
+            "max_tokens",
+            "timeout",
+            "temperature",
+            "enable_copilot",
+            "enable_signal_generation",
+            "enable_risk_check",
+            "enable_backtest_analysis",
+            "enable_auto_tuning"
+          ],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "model_provider": {
+              "type": "string",
+              "enum": ["local", "deepseek", "openai", "anthropic"]
+            },
+            "local_model_path": { "type": "string" },
+            "api_endpoint": { "type": "string" },
+            "api_key": { "type": "string" },
+            "max_tokens": { "type": "integer", "minimum": 1 },
+            "timeout": { "type": "integer", "minimum": 1 },
+            "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
+            "enable_copilot": { "type": "boolean" },
+            "enable_signal_generation": { "type": "boolean" },
+            "enable_risk_check": { "type": "boolean" },
+            "enable_backtest_analysis": { "type": "boolean" },
+            "enable_auto_tuning": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
