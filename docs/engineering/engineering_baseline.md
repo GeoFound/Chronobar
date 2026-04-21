@@ -228,15 +228,20 @@ futures_platform/
 - core/plugin_protocol.md
 - system/ui_bridge_protocol.md
 
-### 第二阶段：核心闭环
+### 第二阶段：核心闭环（严格依序生成）
 
-- models.py
-- event_engine.py
-- main_engine.py
-- session_engine.py
-- bar_aggregator.py
-- plugin_host.py
-- ui_bridge.py
+1. core/enums.py
+2. core/models.py（验证所有协议对象可序列化）
+3. core/events.py
+4. core/exceptions.py
+5. core/event_engine.py
+6. core/main_engine.py
+7. rules/session_engine.py
+8. compute/bar_aggregator.py
+9. plugins/host_api.py
+10. core/ui_bridge.py
+
+**注意：** 必须严格按此顺序生成，防止 AI 在 event_engine.py 中重复定义 EventEnvelope 等已在 models.py 中定义的对象。
 
 ### 第三阶段：接入与展示
 
