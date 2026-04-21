@@ -121,6 +121,18 @@ graph LR
 
 ---
 
+## 交付执行文档
+
+如果你要把 Chronobar 从当前基线持续推进到产品落地，优先参考以下执行文档：
+
+| 文档 | 核心职责 |
+|------|---------|
+| [`docs/engineering/delivery_master_plan.md`](docs/engineering/delivery_master_plan.md) | 定义从 M1 到发布的阶段目标、进入条件、退出条件、回滚条件 |
+| [`docs/engineering/implementation_task_packages.md`](docs/engineering/implementation_task_packages.md) | 把每个阶段拆成可交给任务 AI 或开发者执行的任务包 |
+| [`.windsurf/workflows/execute-chronobar-delivery.md`](.windsurf/workflows/execute-chronobar-delivery.md) | 规定阶段推进、gate 检查、回滚与放行规则 |
+
+---
+
 ## 核心共识
 
 | ✅ 我们这样做 | ❌ 我们不这样做 |
