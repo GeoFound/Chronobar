@@ -34,6 +34,8 @@
 - ✅ [`docs/CONTRIBUTING.md`](CONTRIBUTING.md) - 贡献指南
 - ✅ [`docs/glossary.md`](glossary.md) - 术语表
 - ✅ [`docs/decisions/`](decisions/) - 架构决策记录
+- ✅ [`docs/system/ai_assistant_architecture.md`](system/ai_assistant_architecture.md) - AI Assistant 架构蓝图（补充设计）
+- ✅ [`docs/system/ai_assistant_product_contract.md`](system/ai_assistant_product_contract.md) - AI Assistant 产品契约（补充设计）
 - ✅ `config/defaults/*.yaml` - 默认配置样例
 - ✅ `config/schemas/*.json` - JSON Schema 基线
 - ✅ `pyproject.toml` / `.pre-commit-config.yaml` / `.github/workflows/ci.yml` - 基础工程门禁
@@ -47,6 +49,7 @@
 - 基础校验入口和 CI 门禁已入仓
 - 黄金样例可通过人工审查
 - README 文档地图与正式基线文档数量一致（13 份）
+- AI Assistant 的产品契约与系统蓝图已独立成文，但不提前承诺 M2 之前存在完整运行时实现
 
 ## M2: 核心框架搭建
 
@@ -140,6 +143,7 @@
 ## 长期规划（M6+）
 
 - M6: AI 智能体插件实现
+- M6+: AI Assistant 编排、治理、评测与 MCP 扩展按补充设计文档逐步落地
 - M7: 多网关支持（支持 3+ 期货交易所）
 - M8: 实盘交易支持（连接实盘账户）
 - M9: 策略市场（插件分发平台）

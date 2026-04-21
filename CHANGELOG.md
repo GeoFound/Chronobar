@@ -20,6 +20,7 @@ This document tracks version changes across all protocol documents, following [K
   - Created `docs/glossary.md` with unified terminology
   - Created `docs/roadmap.md` with M1→M2→M3 deliverables
   - Created `docs/faq.md` with common questions
+  - Created `docs/system/ai_assistant_architecture.md` and `docs/system/ai_assistant_product_contract.md` as AI Assistant supplemental design docs
 - Renamed document layers from 第一层/第二层/第三层 to Contracts/Architecture/Engineering Standards
 - GitHub Issue templates for bug reports and feature requests
 
