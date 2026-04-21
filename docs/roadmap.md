@@ -36,6 +36,9 @@
 - ✅ [`docs/decisions/`](decisions/) - 架构决策记录
 - ✅ [`docs/system/ai_assistant_architecture.md`](system/ai_assistant_architecture.md) - AI Assistant 架构蓝图（补充设计）
 - ✅ [`docs/system/ai_assistant_product_contract.md`](system/ai_assistant_product_contract.md) - AI Assistant 产品契约（补充设计）
+- ✅ [`docs/engineering/delivery_master_plan.md`](engineering/delivery_master_plan.md) - 从 M1 到发布的交付总计划
+- ✅ [`docs/engineering/implementation_task_packages.md`](engineering/implementation_task_packages.md) - 面向任务 AI 的实施任务包
+- ✅ [`.windsurf/workflows/execute-chronobar-delivery.md`](../.windsurf/workflows/execute-chronobar-delivery.md) - 分阶段执行工作流
 - ✅ `config/defaults/*.yaml` - 默认配置样例
 - ✅ `config/schemas/*.json` - JSON Schema 基线
 - ✅ `pyproject.toml` / `.pre-commit-config.yaml` / `.github/workflows/ci.yml` - 基础工程门禁
@@ -50,6 +53,7 @@
 - 黄金样例可通过人工审查
 - README 文档地图与正式基线文档数量一致（13 份）
 - AI Assistant 的产品契约与系统蓝图已独立成文，但不提前承诺 M2 之前存在完整运行时实现
+- 从 M1 到产品落地的阶段 gate、回滚条件和任务包已独立成文，可作为任务 AI 的执行依据
 
 ## M2: 核心框架搭建
 
