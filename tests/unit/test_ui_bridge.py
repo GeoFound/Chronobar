@@ -1,10 +1,8 @@
 """Unit tests for UI Bridge."""
 
-from datetime import datetime
-
 import pytest
 
-from core.ui_bridge import UiBridge, BridgeResponse, BridgeErrorCode, BridgeError
+from core.ui_bridge import BridgeError, BridgeErrorCode, BridgeResponse, UiBridge
 
 
 def test_bridge_response_success():

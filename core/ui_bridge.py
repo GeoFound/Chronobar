@@ -2,17 +2,17 @@
 
 import logging
 from datetime import datetime
-from typing import Any
 from enum import Enum
+from typing import Any
 
 from core.exceptions import ChronobarError
-
 
 logger = logging.getLogger(__name__)
 
 
 class BridgeError(ChronobarError):
     """Exception raised for bridge errors."""
+
     pass
 
 
