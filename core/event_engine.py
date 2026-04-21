@@ -138,6 +138,6 @@ class EventBus:
                 handler(event)
             except Exception as e:
                 logger.error(
-                    f"Handler error for event {event.event_id} " f"(type={event.event_type}): {e}",
+                    f"Handler error for event {event.event_id} (type={event.event_type}): {e}",
                     exc_info=True,
                 )

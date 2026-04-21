@@ -472,7 +472,7 @@ AI 在生成代码前必须声明：
 ### 13.1 Python 版本
 
 ```
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.14"
 ```
 
 ### 13.2 Runtime 必选依赖
