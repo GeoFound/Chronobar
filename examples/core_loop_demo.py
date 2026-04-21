@@ -103,7 +103,7 @@ def main():
             "rb_night_session",
         )
 
-        print(f"   Tick {i+1}: {tick.datetime} - Price: {tick.last_price:.2f}")
+        print(f"   Tick {i + 1}: {tick.datetime} - Price: {tick.last_price:.2f}")
         print(f"     Session: {session_type.value}")
         print(f"     Segment: {segment_start} - {segment_end}")
 
@@ -111,7 +111,9 @@ def main():
         bar = bar_aggregator.on_tick(tick)
         if bar:
             bars.append(bar)
-            print(f"     → Bar produced: {bar.datetime} - OHLC: {bar.open:.2f}/{bar.high:.2f}/{bar.low:.2f}/{bar.close:.2f}")
+            print(
+                f"     → Bar produced: {bar.datetime} - OHLC: {bar.open:.2f}/{bar.high:.2f}/{bar.low:.2f}/{bar.close:.2f}"
+            )
 
             # Update indicators
             indicator_values = indicator_manager.on_bar(bar)
