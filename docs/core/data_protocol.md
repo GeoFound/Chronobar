@@ -455,7 +455,47 @@ RiskCheckResult:
   context: dict | null
 ```
 
-### 8.8 交易数据行为约束
+### 8.8 AISignal
+
+```text
+AISignal:
+  signal_id: str
+  signal_type: enum[sentiment, regime, factor, anomaly]
+  source: str  // AI 模型名称（如 "llm-sentiment-v1", "regime-rl-v2"）
+  instrument_id: str | null
+  confidence: float  // 0.0 - 1.0
+  value: float | null  // 信号值（如情感分数、因子值）
+  label: str | null  // 分类标签（如 "bullish", "bearish", "trend", "range"）
+  metadata: dict | null  // 额外信息（如推理过程、模型版本）
+  timestamp: datetime
+```
+
+### 8.9 SentimentScore
+
+```text
+SentimentScore:
+  instrument_id: str
+  source: str  // 新闻源、公告源等
+  sentiment: enum[positive, negative, neutral]
+  score: float  // -1.0 到 1.0
+  confidence: float  // 0.0 - 1.0
+  keywords: list[str] | null  // 关键词列表
+  timestamp: datetime
+```
+
+### 8.10 RegimeLabel
+
+```text
+RegimeLabel:
+  instrument_id: str | null  // null 表示市场整体状态
+  regime: enum[trend, range, high_volatility, low_volatility, transition]
+  confidence: float  // 0.0 - 1.0
+  duration: int  // 预计持续周期数
+  metadata: dict | null  // 额外信息（如驱动因素、特征重要性）
+  timestamp: datetime
+```
+
+### 8.11 交易数据行为约束
 
 - Order 唯一性建议键：`gateway_name + order_id`
 - Trade 唯一性建议键：`gateway_name + trade_id`

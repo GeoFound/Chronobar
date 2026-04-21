@@ -48,7 +48,22 @@ system:
     port: 18777
     query_protocol: "http"
     command_protocol: "http"
-    subscription_protocol: "ws"
+    subscription_protocol: "websocket"
+    subscription_port: 18778
+  ai:
+    enabled: false
+    model_provider: "local"  // enum[local, deepseek, openai, anthropic]
+    local_model_path: "./models/qwen2.5-coder"
+    api_endpoint: ""  // API endpoint for cloud providers
+    api_key: ""  // API key for cloud providers
+    max_tokens: 4096
+    timeout: 30
+    temperature: 0.7
+    enable_copilot: true  // AI Copilot strategy code generation
+    enable_signal_generation: false  // AI signal plugin
+    enable_risk_check: false  // AI risk checker
+    enable_backtest_analysis: false  // AI backtest analyst
+    enable_auto_tuning: false  // AI auto parameter tuning
 ```
 
 说明：

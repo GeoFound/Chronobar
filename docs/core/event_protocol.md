@@ -100,6 +100,11 @@ REPLAY_FINISHED
 REPLAY_PROGRESS
 ```
 
+AI 事件类型：
+
+EVENT_AI_SIGNAL
+EVENT_REGIME_CHANGE
+
 ### 4.1 GATEWAY_STATUS_CHANGED 事件 payload
 
 ```text
@@ -108,6 +113,35 @@ REPLAY_PROGRESS
   "status": str,  // GatewayStatus enum: disconnected, connecting, connected, authenticated, disconnecting, error
   "previous_status": str | null,
   "error_message": str | null
+}
+```
+
+### 4.2 EVENT_AI_SIGNAL 事件 payload
+
+```text
+{
+  "signal_id": str,
+  "signal_type": str,  // enum[sentiment, regime, factor, anomaly]
+  "source": str,  // AI 模型名称
+  "instrument_id": str | null,
+  "confidence": float,  // 0.0 - 1.0
+  "value": float | null,
+  "label": str | null,
+  "metadata": dict | null,
+  "timestamp": datetime
+}
+```
+
+### 4.3 EVENT_REGIME_CHANGE 事件 payload
+
+```text
+{
+  "instrument_id": str | null,  // null 表示市场整体状态
+  "regime": str,  // enum[trend, range, high_volatility, low_volatility, transition]
+  "confidence": float,  // 0.0 - 1.0
+  "duration": int,  // 预计持续周期数
+  "metadata": dict | null,
+  "timestamp": datetime
 }
 ```
 
@@ -158,6 +192,8 @@ REPLAY_PROGRESS
 | REPLAY_STARTED | False | 回放开始事件不应在回放时重放 |
 | REPLAY_FINISHED | False | 回放结束事件不应在回放时重放 |
 | REPLAY_PROGRESS | False | 回放进度事件不应在回放时重放 |
+| EVENT_AI_SIGNAL | False | AI 信号事件不应在回放时重放 |
+| EVENT_REGIME_CHANGE | False | 市场状态变更事件不应在回放时重放 |
 
 ### 5.2 默认规则
 
