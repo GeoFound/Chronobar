@@ -257,6 +257,7 @@ class BaseGateway(ABC):
         self._status = GatewayStatus.DISCONNECTED
         self._callback: Optional[GatewayCallback] = None
         self._reconnect_policy = ReconnectPolicy()
+        self._event_emitter: Optional[Callable[[str, dict], None]] = None
 
     def set_callback(self, callback: GatewayCallback) -> None:
         """设置回调接口"""
@@ -265,6 +266,10 @@ class BaseGateway(ABC):
     def set_reconnect_policy(self, policy: ReconnectPolicy) -> None:
         """设置重连策略"""
         self._reconnect_policy = policy
+
+    def set_event_emitter(self, emitter: Callable[[str, dict], None]) -> None:
+        """设置事件发射器（用于向 EventEngine 发送 PLUGIN_ERROR 等事件）"""
+        self._event_emitter = emitter
 
     @abstractmethod
     def connect(self) -> None:
@@ -361,11 +366,26 @@ class BaseGateway(ABC):
             try:
                 self._callback.on_error(error)
             except Exception as e:
-                # 错误回调本身出错，只能记录日志
-                print(f"Error in error callback: {e}")
+                # 错误回调本身出错，向 EventEngine 发送 PLUGIN_ERROR 事件
+                self._emit_plugin_error("error_callback", e)
 
     def _on_callback_error(self, method: str, error: Exception) -> None:
         """回调异常处理"""
-        print(f"Callback error in {method}: {error}")
+        # 向 EventEngine 发送 PLUGIN_ERROR 事件，保持与 event_protocol.md 一致
+        self._emit_plugin_error(method, error)
         self._emit_error(error)
+
+    def _emit_plugin_error(self, source: str, error: Exception) -> None:
+        """向 EventEngine 发送 PLUGIN_ERROR 事件"""
+        if self._event_emitter:
+            try:
+                self._event_emitter("PLUGIN_ERROR", {
+                    "source": f"gateway_{self.gateway_name}.{source}",
+                    "error_type": type(error).__name__,
+                    "error_message": str(error),
+                    "gateway_name": self.gateway_name
+                })
+            except Exception as e:
+                # 事件发射失败时的兜底日志
+                print(f"Failed to emit PLUGIN_ERROR: {e}")
 ```
