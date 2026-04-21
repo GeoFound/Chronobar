@@ -11,13 +11,13 @@ It integrates all P1 components:
 - P1-T6: UiBridge
 """
 
-from datetime import datetime, date
+from datetime import date, datetime
 
+from core.bar_aggregator import BarAggregator
 from core.enums import Interval, SessionType
 from core.event_engine import EventBus
-from core.models import Tick, Bar
-from core.bar_aggregator import BarAggregator
-from core.indicators import MovingAverage, IndicatorManager
+from core.indicators import IndicatorManager, MovingAverage
+from core.models import Tick
 from core.rule_engine import RuleEngine
 from core.ui_bridge import UiBridge
 
@@ -66,9 +66,9 @@ def main():
         }
     }
     rule_engine.load_session_template("rb_night_session", config)
-    print(f"   ✓ Loaded template: rb_night_session")
-    print(f"   - Exchange: SHFE")
-    print(f"   - Segments: 2")
+    print("   ✓ Loaded template: rb_night_session")
+    print("   - Exchange: SHFE")
+    print("   - Segments: 2")
     print()
 
     # Create sample ticks (spanning multiple minutes to produce bars)
@@ -123,7 +123,7 @@ def main():
     # Demonstrate UiBridge query
     print("4. Testing UiBridge query...")
     response = ui_bridge.query("system.get_status")
-    print(f"   Query: system.get_status")
+    print("   Query: system.get_status")
     print(f"   Response: {response.to_dict()}")
     print()
 
