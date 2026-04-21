@@ -16,6 +16,7 @@ EventHandler = Callable[[EventEnvelope], None]
 
 class EventBusError(ChronobarError):
     """Exception raised for event bus errors."""
+
     pass
 
 
@@ -62,8 +63,11 @@ class EventBus:
             event: Event to publish
 
         Raises:
-            EventBusError: If queue is full
+            EventBusError: If queue is full or event_id is empty
         """
+        if not event.event_id:
+            raise EventBusError("event_id cannot be empty")
+
         try:
             self._queue.put_nowait(event)
         except queue.Full:
@@ -134,7 +138,6 @@ class EventBus:
                 handler(event)
             except Exception as e:
                 logger.error(
-                    f"Handler error for event {event.event_id} "
-                    f"(type={event.event_type}): {e}",
+                    f"Handler error for event {event.event_id} " f"(type={event.event_type}): {e}",
                     exc_info=True,
                 )
