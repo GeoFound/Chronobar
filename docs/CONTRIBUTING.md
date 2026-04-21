@@ -75,6 +75,62 @@ flowchart LR
 - 禁止无约束 `dict` 作为长期数据边界
 - AI 生成代码必须通过声明模板验证
 
+## 协议变更流程
+
+### 协议契约层（Contracts）变更
+
+协议契约层（包括 `docs/core/` 下的所有协议文档）是系统的核心边界，变更需要严格流程：
+
+1. **提案阶段**：提交 GitHub Issue，标签使用 `protocol-change`，描述变更原因和影响范围
+2. **RFC 流程**：对于重大变更（如新增协议、修改核心数据结构），需要提交 RFC（Request for Comments）文档
+3. **社区讨论**：RFC 需要至少 7 天社区讨论期，收集反馈
+4. **审批决策**：由项目维护者审批，审批通过后方可实施
+5. **实施变更**：通过 Pull Request 提交变更，关联 Issue 和 RFC
+6. **版本更新**：更新协议文档版本号，同步更新 CHANGELOG.md
+
+### 系统架构层（Architecture）和工程规范层（Engineering Standards）变更
+
+这两层变更相对宽松，但仍需：
+
+1. 提交 GitHub Issue 描述变更
+2. 通过 Pull Request 提交变更
+3. 至少一名 Reviewer 批准
+4. 更新相关文档和 CHANGELOG.md
+
+### 文档模板
+
+所有协议文档应遵循以下头部格式：
+
+```markdown
+# [文档标题]
+
+**状态：** ✅ 已定稿 / 🔄 草稿 / ⚠️ 待审核
+**版本：** v1.0
+**最后更新：** 2026-04-21
+**负责人：** @username
+
+## 概述
+
+[文档简要说明]
+
+## 内容
+
+[文档正文]
+```
+
+### Issue 标签体系
+
+使用以下标签帮助快速分类贡献：
+
+- `protocol-question` - 协议理解问题
+- `protocol-change` - 协议变更提案
+- `m2-blocker` - M2 阶段阻塞问题
+- `design-decision` - 架构设计决策
+- `bug` - Bug 报告
+- `enhancement` - 功能增强
+- `documentation` - 文档改进
+- `good first issue` - 适合新贡献者的任务
+
 ## 维护原则
 
 ### README 维护

@@ -15,6 +15,21 @@
 <!-- 列出本次变更涉及的文件和模块 -->
 - 
 
+## 协议影响
+<!-- 如涉及协议文档变更，请说明受影响的协议章节 -->
+- [ ] `docs/core/data_protocol.md` - Data Protocol
+- [ ] `docs/core/event_protocol.md` - Event Protocol
+- [ ] `docs/core/gateway_protocol.md` - Gateway Protocol
+- [ ] `docs/core/plugin_protocol.md` - Plugin Protocol
+- [ ] `docs/core/ai_protocol.md` - AI Protocol
+- [ ] `docs/core/strategy_protocol.md` - Strategy Protocol
+- [ ] `docs/core/risk_protocol.md` - Risk Protocol
+- [ ] `docs/core/backtest_protocol.md` - Backtest Protocol
+- [ ] `docs/system/architecture.md` - Architecture
+- [ ] `docs/system/config_protocol.md` - Config Protocol
+- [ ] `docs/system/ui_bridge_protocol.md` - UI Bridge Protocol
+- [ ] None (no protocol changes) 
+
 ## 关联 Issue
 <!-- 如有，请关联相关的 Issue -->
 Closes #

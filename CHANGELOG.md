@@ -1,8 +1,24 @@
 # Chronobar Protocol Changelog
 
-This document tracks version changes across all protocol documents.
+This document tracks version changes across all protocol documents, following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
 
-## v1.2 (2026-04-21)
+## [Unreleased]
+
+### Added
+- Documentation architecture improvements:
+  - Created `docs/decisions/` ADR directory with storage architecture decision record
+  - Created `docs/glossary.md` with unified terminology
+  - Created `docs/roadmap.md` with M1→M2→M3 deliverables
+  - Created `docs/faq.md` with common questions
+- Renamed document layers from 第一层/第二层/第三层 to Contracts/Architecture/Engineering Standards
+- GitHub Issue templates for bug reports and feature requests
+
+### Changed
+- README layer naming to use Contracts/Architecture/Engineering Standards instead of Chinese layer names
+- Comparison table data接入 entry to be more specific and honest (国内主流期货 API（计划）)
+- Core principles table to fix duplicate text
+
+## [1.2.0] - 2026-04-21
 
 ### Strategic Decisions
 - **Target Users**: Personal quant users and personal trading users
