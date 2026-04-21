@@ -63,11 +63,10 @@ def test_default_configs_validate_against_schemas() -> None:
         )
 
 
-def test_readme_mentions_m1_baseline_state() -> None:
+def test_readme_mentions_p1_completion_status() -> None:
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
-
-    assert "M1 基线收敛中" in readme
-    assert "默认配置、Schema 与基础测试/CI 已入仓" in readme
+    # Check for P1 completion status
+    assert "P1 核心闭环完成" in readme
 
 
 def test_ui_contract_examples_match_protocol_baseline() -> None:
