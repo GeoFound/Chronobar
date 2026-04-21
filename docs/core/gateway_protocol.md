@@ -183,7 +183,7 @@ class ReconnectPolicy:
   "gateway_type": "ctp",
   "broker_id": "9999",
   "investor_id": "user001",
-  "password": "password",
+  "password": "<your_password>",
   "td_address": "tcp://180.168.146.187:10101",
   "md_address": "tcp://180.168.146.187:10131",
   "app_id": "simnow_client_test",
@@ -203,12 +203,17 @@ class ReconnectPolicy:
 - gateway_type: 网关类型（ctp、openctp、sim、mock）
 - broker_id: 期货公司 ID
 - investor_id: 投资者账号
-- password: 密码
+- password: 密码（禁止写入配置文件，运行时从环境变量注入）
 - td_address: 交易服务器地址
 - md_address: 行情服务器地址
 - app_id: 应用 ID（CTP 6.3+）
 - auth_code: 认证码（CTP 6.3+）
 - reconnect_policy: 重连策略配置
+
+**密码管理策略：**
+- 禁止将明文密码写入配置文件
+- 运行时通过环境变量注入（如 `GATEWAY_PASSWORD_<gateway_name>`）
+- 配置文件中的 password 字段仅作为占位符或引用环境变量名
 
 ## 8. 网关实现要求
 

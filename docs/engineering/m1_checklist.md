@@ -25,6 +25,8 @@ M1 关注的是：**协议和工程边界已经稳定，后续开发不会反复
 
 ## 2. M1 验收口径
 
+**本文件是 `engineering/engineering_baseline.md` §14 的可操作展开版本。两者以本文件为执行准则，以 baseline 为概念锚点。**
+
 M1 验收标准参考 `engineering/engineering_baseline.md` 第14节定义：
 
 - 四类协议定稿

@@ -139,6 +139,9 @@ UI Bridge 包含三类接口：
 - `WORKSPACE_SAVE_FAILED` - 工作区保存失败
 - `PLUGIN_LOAD_FAILED` - 插件加载失败
 - `PLUGIN_UNLOAD_FAILED` - 插件卸载失败
+- `INVALID_COMMAND` - 无效命令
+- `INVALID_INTERVAL` - 无效周期
+- `REPLAY_NOT_READY` - 回放未就绪
 
 **订阅错误码：**
 - `SUBSCRIPTION_INVALID_PARAMS` - 订阅参数无效
@@ -309,15 +312,7 @@ Command 是意图表达，不是状态读取。
 
 ### 10.1 错误分类
 
-- BRIDGE_VALIDATION_ERROR
-- BRIDGE_TIMEOUT
-- WORKSPACE_NOT_FOUND
-- INVALID_COMMAND
-- INVALID_INTERVAL
-- REPLAY_NOT_READY
-- PLUGIN_NOT_FOUND
-- PERMISSION_DENIED
-- INTERNAL_ERROR
+所有标准错误码定义见 §5.5 错误码枚举。前后端必须统一引用该节定义的错误码，不得自行新增。
 
 ### 10.2 错误要求
 

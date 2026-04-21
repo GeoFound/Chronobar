@@ -49,6 +49,8 @@ EventEnvelope:
 SYSTEM_START
 SYSTEM_STOP
 
+GATEWAY_STATUS_CHANGED
+
 TICK
 BAR
 BAR_CLOSED
@@ -98,6 +100,17 @@ REPLAY_FINISHED
 REPLAY_PROGRESS
 ```
 
+### 4.1 GATEWAY_STATUS_CHANGED 事件 payload
+
+```text
+{
+  "gateway_name": str,
+  "status": str,  // GatewayStatus enum: disconnected, connecting, connected, authenticated, disconnecting, error
+  "previous_status": str | null,
+  "error_message": str | null
+}
+```
+
 ## 5. 路由规则
 
 ### 5.1 事件 replayable 标注
@@ -108,6 +121,7 @@ REPLAY_PROGRESS
 |---------|-----------|------|
 | SYSTEM_START | False | 系统启动事件不应在回放时重放 |
 | SYSTEM_STOP | False | 系统停止事件不应在回放时重放 |
+| GATEWAY_STATUS_CHANGED | False | 网关状态变化事件不应在回放时重放 |
 | TICK | True | 行情事件可回放 |
 | BAR | True | K线事件可回放 |
 | BAR_CLOSED | True | K线闭合事件可回放 |

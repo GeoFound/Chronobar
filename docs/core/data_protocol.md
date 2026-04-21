@@ -298,15 +298,18 @@ class OrderRequest:
     offset: str
     price: float
     volume: float
-    strategy_id: str | None = None
-    context: dict[str, Any] | None = None
+    time_in_force: str | None = None
+    stop_price: float | None = None
+    reference: str | None = None
+    extra: dict[str, Any] | None = None
 
 @dataclass(slots=True)
 class CancelRequest:
     gateway_name: str
     order_id: str
-    reason: str | None = None
-    context: dict[str, Any] | None = None
+    gateway_order_id: str | None = None
+    reference: str | None = None
+    extra: dict[str, Any] | None = None
 ```
 
 ## 8. 交易执行数据协议

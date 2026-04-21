@@ -330,7 +330,7 @@ requires-python = ">=3.11,<3.13"
 pydantic>=2.5,<3
 fastapi>=0.110,<1
 uvicorn>=0.27,<1
-duckdb>=0.10,<1
+duckdb>=0.10,<2
 pyarrow>=14.0,<15
 orjson>=3.9,<4
 typing-extensions>=4.9,<5
