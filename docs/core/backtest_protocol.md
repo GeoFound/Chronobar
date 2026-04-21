@@ -90,8 +90,16 @@ class BacktestResult:
 
 class BacktestEngine(ABC):
     @abstractmethod
-    def load_data(self, config: BacktestConfig) -> None:
-        """加载历史数据"""
+    def load_data(self, config: BacktestConfig, progress_callback: Callable[[float], None] | None = None) -> None:
+        """加载历史数据
+
+        Parquet 数据加载策略：
+        - 按交易日分片加载：instrument_id/trading_date.parquet
+        - 支持懒加载：仅在需要时加载特定交易日数据
+        - 并发读取：最多 4 个并发 Parquet 文件读取任务
+        - 内存上限：单次加载不超过 1GB 内存
+        - 进度回调：progress_callback(0.0-1.0) 报告加载进度
+        """
         ...
 
     @abstractmethod

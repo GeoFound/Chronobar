@@ -250,30 +250,40 @@ class Trade:
     datetime: datetime
     trading_date: date
     session_type: SessionType
+    gateway_trade_id: str | None = None
+    commission: float | None = None
     extra: dict[str, Any] | None = None
 
 @dataclass(slots=True)
 class Position:
+    gateway_name: str
+    exchange: str
+    symbol: str
     instrument_id: str
     direction: str
     volume: float
-    frozen_volume: float
-    price: float
-    pnl: float
+    available_volume: float
+    avg_price: float
+    open_price: float
+    unrealized_pnl: float
+    realized_pnl: float
+    margin: float
+    datetime: datetime
     trading_date: date
-    gateway_name: str
     extra: dict[str, Any] | None = None
 
 @dataclass(slots=True)
 class Account:
-    account_id: str
     gateway_name: str
+    account_id: str
     balance: float
     available: float
-    frozen: float
     margin: float
+    frozen_margin: float
+    commission: float
     position_profit: float
     close_profit: float
+    datetime: datetime
     trading_date: date
     extra: dict[str, Any] | None = None
 

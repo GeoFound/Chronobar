@@ -42,7 +42,7 @@
 - **限制**：不能直接访问核心交易逻辑，只能通过 UI Bridge
 - **适用场景**：自定义面板、第三方工具集成、特殊可视化需求
 
-## 3. 插件目录结构
+## 4. 插件目录结构
 
 ```text
 plugin_name/
@@ -53,9 +53,9 @@ plugin_name/
   README.md
 ```
 
-## 4. manifest 基线
+## 5. manifest 基线
 
-### 4.1 指标插件 manifest
+### 5.1 指标插件 manifest
 
 ```json
 {
@@ -80,7 +80,7 @@ plugin_name/
 }
 ```
 
-### 4.2 信号插件 manifest
+### 5.2 信号插件 manifest
 
 ```json
 {
@@ -105,7 +105,7 @@ plugin_name/
 }
 ```
 
-### 4.3 策略插件 manifest
+### 5.3 策略插件 manifest
 
 ```json
 {
@@ -140,7 +140,7 @@ plugin_name/
 }
 ```
 
-### 4.4 UI 扩展插件 manifest
+### 5.4 UI 扩展插件 manifest
 
 ```json
 {
@@ -163,7 +163,7 @@ plugin_name/
 }
 ```
 
-### 4.5 依赖加载策略
+### 5.5 依赖加载策略
 
 **depends_on 字段处理：**
 
@@ -177,7 +177,7 @@ plugin_name/
 - 如果 load_after 中声明的插件未加载，加载器应发出警告但仍继续加载当前插件。
 - load_after 不影响依赖关系的正确性，仅影响初始化顺序。
 
-## 5. 生命周期接口
+## 6. 生命周期接口
 
 ```python
 def manifest() -> dict: ...
@@ -198,7 +198,7 @@ def schema() -> dict: ...
 - `outputs`：声明插件可向系统暴露的标准输出
 - `schema`：声明参数面板、样式项、校验规则
 
-## 6. Host API 基线
+## 7. Host API 基线
 
 ```python
 class PluginContext(Protocol):
@@ -212,9 +212,9 @@ class PluginContext(Protocol):
     def read_cache(self, key: str) -> object | None: ...
 ```
 
-## 7. 权限模型
+## 8. 权限模型
 
-### 7.1 权限分级
+### 8.1 权限分级
 
 - **read_market_data**：读取市场数据（tick、bar、instrument）
 - **emit_alert**：发布告警
@@ -226,7 +226,7 @@ class PluginContext(Protocol):
 - **read_account**：读取账户（策略专用，需用户授权）
 - **read_open_orders**：读取未成交委托（策略专用，需用户授权）
 
-### 7.2 默认权限原则
+### 8.2 默认权限原则
 
 - 默认无权限
 - 按 manifest 显式声明
@@ -234,7 +234,7 @@ class PluginContext(Protocol):
 - 未授权调用直接拒绝并记录日志
 - 策略插件需要用户显式授权才能加载
 
-### 7.3 禁止行为
+### 8.3 禁止行为
 
 - 禁止插件直接持有数据库连接
 - 禁止插件直接持有主窗口内部对象
@@ -243,7 +243,7 @@ class PluginContext(Protocol):
 - 禁止插件修改核心对象私有状态
 - 禁止插件在未授权情况下写文件或发网络请求
 
-## 8. 输出契约
+## 9. 输出契约
 
 插件输出必须满足以下条件：
 
@@ -254,7 +254,7 @@ class PluginContext(Protocol):
 5. 输出必须可在回放模式下重现。
 6. 输出进入展示层前必须经过标准映射。
 
-## 9. 展示层映射约束
+## 10. 展示层映射约束
 
 - 插件不得直接操作前端组件。
 - 插件不得直接调用图表实例方法。
@@ -262,7 +262,7 @@ class PluginContext(Protocol):
 - 展示层只消费声明过的数据域和标准输出结构。
 - 插件输出在实时与回放模式下必须保持同构。
 
-## 10. 异常隔离
+## 11. 异常隔离
 
 - 插件异常不得拖垮主进程
 - 单插件失败不影响其他插件
@@ -270,7 +270,7 @@ class PluginContext(Protocol):
 - 连续异常达到阈值可自动停用插件
 - 停用行为必须可记录、可恢复、可告警
 
-## 11. Python 参考抽象
+## 12. Python 参考抽象
 
 ```python
 from abc import ABC, abstractmethod
@@ -304,7 +304,7 @@ class BasePlugin(ABC):
         return {}
 ```
 
-## 12. 最低测试要求
+## 13. 最低测试要求
 
 - manifest 解析测试
 - schema 参数校验测试

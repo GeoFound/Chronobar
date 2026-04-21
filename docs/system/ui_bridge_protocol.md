@@ -24,10 +24,29 @@ UI Bridge 包含三类接口：
 2. Command API
 3. Subscription API
 
-推荐实现方式：
-- Query API：本地 HTTP / IPC 请求响应
-- Command API：本地 HTTP / IPC 请求响应
-- Subscription API：WebSocket / IPC 流式推送
+### 3.1 Tauri IPC 绑定决策
+
+**部署形态：** Tauri + React 前端 + Python sidecar 进程
+
+**Query API / Command API：使用 tauri::invoke**
+
+- Query 和 Command 操作使用 Tauri 的 invoke 机制
+- 前端通过 `invoke('query', { method: 'system.get_status' })` 调用
+- Python sidecar 通过 Tauri IPC 接收请求并返回 JSON 响应
+- **理由：** invoke 机制轻量、类型安全、与 Tauri 生态系统深度集成
+
+**Subscription API：使用 WebSocket**
+
+- 订阅操作使用 WebSocket 长连接
+- 前端通过 WebSocket 连接到 Python sidecar 的 WebSocket 端口
+- Python sidecar 通过 WebSocket 推送事件流
+- **理由：** Tauri 的 tauri::event 适合简单事件，但复杂订阅过滤、批量推送、重连恢复等场景下 WebSocket 更灵活
+
+**端口约定：**
+
+- Python sidecar HTTP 端口：18080（调试用）
+- Python sidecar WebSocket 端口：18081
+- 前端优先使用 invoke，HTTP 端口仅用于调试和故障排查
 
 具体传输实现可以替换，但语义边界不得改变。
 
