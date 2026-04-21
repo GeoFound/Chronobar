@@ -294,10 +294,10 @@ def submit_order(self, request: OrderRequest) -> str:
         current_account=self.get_account(),
         current_orders=self.get_open_orders()
     )
-    
+
     # 执行风控检查
     result = self.risk_manager.check_order(risk_request)
-    
+
     # 检查结果
     if not result.passed:
         # 触发 RISK_BLOCKED 事件
@@ -308,7 +308,7 @@ def submit_order(self, request: OrderRequest) -> str:
             payload=result
         ))
         raise RiskCheckError(result.block_reason)
-    
+
     # 通过风控检查，提交订单
     return self.gateway.submit_order(request)
 ```
@@ -323,7 +323,7 @@ def submit_order(self, request: OrderRequest) -> str:
 class CustomRiskChecker(RiskChecker):
     def get_check_type(self) -> str:
         return "custom"
-    
+
     def check(self, request: RiskCheckRequest) -> RiskCheckResult:
         # 自定义风控逻辑
         if some_condition:
@@ -413,13 +413,13 @@ class RiskChecker(ABC):
 class RiskManager:
     def __init__(self):
         self._checkers: dict[str, RiskChecker] = {}
-    
+
     def register_checker(self, checker: RiskChecker) -> None:
         self._checkers[checker.get_check_type()] = checker
-    
+
     def unregister_checker(self, check_type: str) -> None:
         self._checkers.pop(check_type, None)
-    
+
     def check_order(self, request: RiskCheckRequest) -> RiskCheckResult:
         # 按顺序执行所有检查
         check_order = [
@@ -430,14 +430,14 @@ class RiskManager:
             RiskCheckType.ORDER_LIMIT,
             RiskCheckType.CUSTOM
         ]
-        
+
         for check_type in check_order:
             checker = self._checkers.get(check_type)
             if checker:
                 result = checker.check(request)
                 if not result.passed:
                     return result
-        
+
         return RiskCheckResult(
             passed=True,
             check_type="all",

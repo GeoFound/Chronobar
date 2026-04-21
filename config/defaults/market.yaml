@@ -1,0 +1,15 @@
+market:
+  gateways:
+    ctp_main:
+      type: "ctp"
+      md_front: "tcp://127.0.0.1:41213"
+      td_front: "tcp://127.0.0.1:41205"
+      broker_id: "9999"
+      auth_code: ""
+      app_id: "simnow_client_test"
+  exchanges:
+    SHFE: {}
+    DCE: {}
+    CZCE: {}
+    INE: {}
+    CFFEX: {}

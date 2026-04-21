@@ -1,0 +1,21 @@
+workspace:
+  default:
+    watchlist:
+      - "rb2509"
+      - "i2509"
+      - "ag2506"
+    chart_template: "futures_intraday_v1"
+    panels:
+      - "price"
+      - "volume"
+      - "indicator"
+      - "log"
+      - "alert"
+    layout:
+      type: "grid"
+      preset: "trader-3pane"
+    theme: "dark"
+    interactions:
+      crosshair_sync: true
+      symbol_link_group: "A"
+      interval_link_group: "A"

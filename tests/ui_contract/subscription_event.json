@@ -1,0 +1,15 @@
+{
+  "event_id": "event-001",
+  "event_type": "BAR",
+  "source": "compute.bar_1m",
+  "ts": "2026-04-20T10:00:00+08:00",
+  "instrument_id": "rb2509",
+  "session_id": "SHFE.rb2509.20260420.day",
+  "payload": {
+    "interval": "1m",
+    "close": 3488.0
+  },
+  "trace_id": "trace-subscription-001",
+  "replayable": true,
+  "version": "1.2"
+}

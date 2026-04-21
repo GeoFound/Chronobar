@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/indicator.schema.json",
+  "title": "IndicatorConfig",
+  "type": "object",
+  "required": ["indicator"],
+  "properties": {
+    "indicator": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["type", "enabled", "input", "window", "continuity", "session_scope", "style"],
+        "properties": {
+          "type": { "type": "string" },
+          "enabled": { "type": "boolean" },
+          "input": { "type": "string" },
+          "window": { "type": "integer", "minimum": 1 },
+          "continuity": { "type": "string" },
+          "session_scope": { "type": "string" },
+          "style": {
+            "type": "object",
+            "required": ["color", "width"],
+            "properties": {
+              "color": { "type": "string" },
+              "width": { "type": "integer", "minimum": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

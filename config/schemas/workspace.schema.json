@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/workspace.schema.json",
+  "title": "WorkspaceConfig",
+  "type": "object",
+  "required": ["workspace"],
+  "properties": {
+    "workspace": {
+      "type": "object",
+      "required": ["default"],
+      "properties": {
+        "default": {
+          "type": "object",
+          "required": ["watchlist", "chart_template", "panels", "layout", "theme", "interactions"],
+          "properties": {
+            "watchlist": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "chart_template": { "type": "string" },
+            "panels": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            },
+            "layout": {
+              "type": "object",
+              "required": ["type", "preset"],
+              "properties": {
+                "type": { "type": "string" },
+                "preset": { "type": "string" }
+              },
+              "additionalProperties": false
+            },
+            "theme": { "type": "string" },
+            "interactions": {
+              "type": "object",
+              "required": ["crosshair_sync", "symbol_link_group", "interval_link_group"],
+              "properties": {
+                "crosshair_sync": { "type": "boolean" },
+                "symbol_link_group": { "type": "string" },
+                "interval_link_group": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
