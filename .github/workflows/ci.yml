@@ -39,5 +39,8 @@ jobs:
       - name: Run pre-commit hooks
         run: just lint
 
+      - name: Run mypy full check
+        run: uv run mypy core/ --config-file=pyproject.toml --no-incremental
+
       - name: Run baseline tests
         run: just test
