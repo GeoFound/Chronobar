@@ -3,7 +3,6 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 LINK_PATTERN = re.compile(r"!?(?:\[[^\]]*\])\(([^)]+)\)")
 HEADING_PATTERN = re.compile(r"^(#{1,6})\s+(.*\S)\s*$", re.MULTILINE)
@@ -98,6 +97,8 @@ def test_markdown_heading_slugs_are_unique() -> None:
         if duplicates:
             relative_source = markdown_file.relative_to(REPO_ROOT)
             for slug, lines in sorted(duplicates.items()):
-                failures.append(f"{relative_source}: duplicate heading slug '{slug}' at lines {lines}")
+                failures.append(
+                    f"{relative_source}: duplicate heading slug '{slug}' at lines {lines}"
+                )
 
     assert not failures, "Duplicate markdown heading slugs found:\n" + "\n".join(failures)
