@@ -203,6 +203,100 @@ class Bar:
     turnover: float
     open_interest: float
     extra: dict[str, Any] | None = field(default=None)
+
+class CancelReasonCode(str, Enum):
+    TIMEOUT = "timeout"
+    REJECTED_BY_USER = "rejected_by_user"
+    REJECTED_BY_RISK = "rejected_by_risk"
+    REJECTED_BY_EXCHANGE = "rejected_by_exchange"
+    CONNECTION_LOST = "connection_lost"
+    OTHER = "other"
+
+@dataclass(slots=True)
+class Order:
+    order_id: str
+    gateway_name: str
+    exchange: str
+    symbol: str
+    instrument_id: str
+    order_type: str
+    direction: str
+    offset: str
+    price: float
+    volume: float
+    traded_volume: float
+    status: str
+    datetime: datetime
+    trading_date: date
+    session_type: SessionType
+    gateway_order_id: str | None = None
+    error_message: str | None = None
+    cancellation_reason: str | None = None
+    cancel_reason_code: CancelReasonCode | None = None
+    extra: dict[str, Any] | None = None
+
+@dataclass(slots=True)
+class Trade:
+    trade_id: str
+    order_id: str
+    gateway_name: str
+    exchange: str
+    symbol: str
+    instrument_id: str
+    direction: str
+    offset: str
+    price: float
+    volume: float
+    datetime: datetime
+    trading_date: date
+    session_type: SessionType
+    extra: dict[str, Any] | None = None
+
+@dataclass(slots=True)
+class Position:
+    instrument_id: str
+    direction: str
+    volume: float
+    frozen_volume: float
+    price: float
+    pnl: float
+    trading_date: date
+    gateway_name: str
+    extra: dict[str, Any] | None = None
+
+@dataclass(slots=True)
+class Account:
+    account_id: str
+    gateway_name: str
+    balance: float
+    available: float
+    frozen: float
+    margin: float
+    position_profit: float
+    close_profit: float
+    trading_date: date
+    extra: dict[str, Any] | None = None
+
+@dataclass(slots=True)
+class OrderRequest:
+    gateway_name: str
+    exchange: str
+    symbol: str
+    instrument_id: str
+    order_type: str
+    direction: str
+    offset: str
+    price: float
+    volume: float
+    strategy_id: str | None = None
+    context: dict[str, Any] | None = None
+
+@dataclass(slots=True)
+class CancelRequest:
+    gateway_name: str
+    order_id: str
+    reason: str | None = None
+    context: dict[str, Any] | None = None
 ```
 
 ## 8. 交易执行数据协议

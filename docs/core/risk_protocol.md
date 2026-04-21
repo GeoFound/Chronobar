@@ -79,7 +79,7 @@ class RiskCheckRequest:
 @dataclass(slots=True)
 class RiskCheckResult:
     passed: bool
-    check_type: str
+    check_type: RiskCheckType
     block_reason: str | None
     block_code: str | None
     check_time: datetime

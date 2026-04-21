@@ -389,6 +389,11 @@ class BacktestMode(str, Enum):
     SIM = "sim"
     LIVE = "live"
 
+class HistoricalDataFormat(str, Enum):
+    PARQUET = "parquet"
+    CSV = "csv"
+    DATABASE = "database"
+
 @dataclass(slots=True)
 class BacktestConfig:
     start_date: date
@@ -398,6 +403,7 @@ class BacktestConfig:
     slippage: float
     mode: BacktestMode
     data_source: str
+    data_format: HistoricalDataFormat = HistoricalDataFormat.PARQUET
     strategy_id: str
     parameters: dict[str, Any]
 

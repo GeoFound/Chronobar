@@ -100,7 +100,52 @@ REPLAY_PROGRESS
 
 ## 5. 路由规则
 
-### 5.1 默认规则
+### 5.1 事件 replayable 标注
+
+以下表格定义了各类事件的 replayable 默认值：
+
+| 事件类型 | replayable | 说明 |
+|---------|-----------|------|
+| SYSTEM_START | False | 系统启动事件不应在回放时重放 |
+| SYSTEM_STOP | False | 系统停止事件不应在回放时重放 |
+| TICK | True | 行情事件可回放 |
+| BAR | True | K线事件可回放 |
+| BAR_CLOSED | True | K线闭合事件可回放 |
+| REPLAY_TICK | True | 回放行情事件可回放 |
+| REPLAY_BAR | True | 回放K线事件可回放 |
+| ORDER | True | 订单事件可回放 |
+| ORDER_ACCEPTED | True | 订单接受事件可回放 |
+| ORDER_REJECTED | True | 订单拒绝事件可回放 |
+| ORDER_CANCELLED | True | 订单撤消事件可回放 |
+| ORDER_PARTIAL_FILLED | True | 订单部分成交事件可回放 |
+| ORDER_FILLED | True | 订单完全成交事件可回放 |
+| TRADE | True | 成交事件可回放 |
+| TRADE_FILLED | True | 成交填充事件可回放 |
+| POSITION | True | 持仓事件可回放 |
+| POSITION_UPDATED | True | 持仓更新事件可回放 |
+| ACCOUNT | True | 账户事件可回放 |
+| ACCOUNT_UPDATED | True | 账户更新事件可回放 |
+| RISK_BLOCKED | True | 风控拦截事件可回放 |
+| RISK_WARNING | True | 风控警告事件可回放 |
+| TIMER_1S | False | 定时器事件不应在回放时重放 |
+| TIMER_5S | False | 定时器事件不应在回放时重放 |
+| TIMER_1M | False | 定时器事件不应在回放时重放 |
+| SESSION_OPEN | True | 时段开启事件可回放 |
+| SESSION_CLOSE | True | 时段关闭事件可回放 |
+| SESSION_SWITCH | True | 时段切换事件可回放 |
+| ALERT | True | 告警事件可回放 |
+| PLUGIN_ERROR | True | 插件错误事件可回放 |
+| CONFIG_CHANGED | False | 配置变更事件不应在回放时重放 |
+| WORKSPACE_CHANGED | False | 工作区变更事件不应在回放时重放 |
+| PANEL_CHANGED | False | 面板变更事件不应在回放时重放 |
+| SUBSCRIPTION_CHANGED | False | 订阅变更事件不应在回放时重放 |
+| THEME_CHANGED | False | 主题变更事件不应在回放时重放 |
+| ACTIVE_INSTRUMENT_CHANGED | False | 活跃合约变更事件不应在回放时重放 |
+| REPLAY_STARTED | False | 回放开始事件不应在回放时重放 |
+| REPLAY_FINISHED | False | 回放结束事件不应在回放时重放 |
+| REPLAY_PROGRESS | False | 回放进度事件不应在回放时重放 |
+
+### 5.2 默认规则
 
 - 全局订阅：按 `event_type` 订阅
 - 精细订阅：按 `event_type + instrument_id` 订阅
@@ -108,7 +153,7 @@ REPLAY_PROGRESS
 - 回放事件：必须保留原始 `trace_id`
 - 发往前端的事件必须经过桥接层过滤与格式标准化
 
-### 5.2 禁止行为
+### 5.3 禁止行为
 
 - 禁止插件直接调用其他插件内部方法作为主协作通道
 - 禁止 UI 组件直接订阅底层原始回调而绕过事件引擎
