@@ -1,11 +1,11 @@
 """Unit tests for technical indicators."""
 
-from datetime import datetime, date
+from datetime import date, datetime
 
 import pytest
 
 from core.enums import Interval, SessionType
-from core.indicators import MovingAverage, IndicatorManager, IndicatorError
+from core.indicators import IndicatorError, IndicatorManager, MovingAverage
 from core.models import Bar
 
 

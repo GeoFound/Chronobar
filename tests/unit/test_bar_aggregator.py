@@ -1,6 +1,6 @@
 """Unit tests for bar aggregator."""
 
-from datetime import datetime, time, date
+from datetime import date, datetime
 
 import pytest
 

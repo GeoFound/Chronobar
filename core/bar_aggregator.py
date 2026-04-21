@@ -2,19 +2,18 @@
 
 import logging
 from collections import deque
-from datetime import datetime, time, timedelta
-from typing import Any
+from datetime import datetime
 
-from core.enums import Interval, SessionType
+from core.enums import Interval
 from core.exceptions import ChronobarError
 from core.models import Bar, Tick
-
 
 logger = logging.getLogger(__name__)
 
 
 class BarAggregatorError(ChronobarError):
     """Exception raised for bar aggregator errors."""
+
     pass
 
 

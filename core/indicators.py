@@ -2,19 +2,17 @@
 
 import logging
 from collections import deque
-from datetime import datetime
 from typing import Any
 
-from core.enums import Interval
 from core.exceptions import ChronobarError
 from core.models import Bar
-
 
 logger = logging.getLogger(__name__)
 
 
 class IndicatorError(ChronobarError):
     """Exception raised for indicator errors."""
+
     pass
 
 
