@@ -66,7 +66,7 @@ class MovingAverage:
 class IndicatorManager:
     """Manages multiple indicators."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize indicator manager."""
         self._indicators: dict[str, Any] = {}
 
