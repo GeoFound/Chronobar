@@ -161,6 +161,7 @@ def test_bridge_response_serialization():
 
     # Verify all values are JSON-serializable
     import json
+
     json_str = json.dumps(result)
     assert json_str is not None
 

@@ -53,7 +53,13 @@ class BridgeErrorCode(Enum):
 class BridgeResponse:
     """Standard bridge response format."""
 
-    def __init__(self, ok: bool, data: Any | None = None, error: dict[str, str] | None = None, trace_id: str | None = None):
+    def __init__(
+        self,
+        ok: bool,
+        data: Any | None = None,
+        error: dict[str, str] | None = None,
+        trace_id: str | None = None,
+    ):
         """Initialize bridge response.
 
         Args:
