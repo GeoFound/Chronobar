@@ -31,28 +31,17 @@ Chronobar 是面向个人量化用户和个人交易用户的期货量化桌面�
 
 ## 快速开始
 
-> **M2 阶段将提供完整安装指南**
+> 当前处于 M1 协议定稿阶段（仅文档），M2 起提供可运行环境。
 
-本仓库当前处于 M1 协议定稿阶段，仅包含文档和配置文件。M2 阶段将提供：
+**路线图：** M1 协议定稿（当前） → M2 核心框架 → M3 插件系统 → M4 回测 → M5 前端
+
+M2 阶段将提供：
 - 完整的安装依赖说明
 - 环境配置指南
 - 第一个可运行的最小闭环示例
 - 快速启动脚本
 
 如需提前了解开发规划，请参阅 [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md)。
-
-## 当前状态
-
-**M1 协议定稿阶段**
-
-本仓库当前处于 M1 协议定稿阶段，仅包含文档（docs/）和配置文件，尚未创建代码目录（core/、gateways/、compute/ 等）。代码目录将在 M2 阶段按 [`docs/engineering/engineering_baseline.md`](docs/engineering/engineering_baseline.md) 规定的结构创建。
-
-**路线图：**
-- M1: 协议定稿（当前）
-- M2: 核心框架搭建
-- M3: 插件系统实现
-- M4: 回测系统实现
-- M5: 前端界面完善
 
 ---
 
@@ -81,23 +70,7 @@ Chronobar 是面向个人量化用户和个人交易用户的期货量化桌面�
 
 ---
 
-## 推荐阅读顺序
-
-如果你是第一次接手这个项目，建议按下面顺序阅读：
-
-1. [`docs/system/architecture.md`](docs/system/architecture.md) - 整体骨架、系统分层、主流程
-2. [`docs/core/data_protocol.md`](docs/core/data_protocol.md) - 标准对象
-3. [`docs/core/event_protocol.md`](docs/core/event_protocol.md) - 事件模型
-4. [`docs/core/gateway_protocol.md`](docs/core/gateway_protocol.md) - 网关接口定义
-5. [`docs/core/plugin_protocol.md`](docs/core/plugin_protocol.md) - 扩展能力接入
-6. [`docs/core/ai_protocol.md`](docs/core/ai_protocol.md) - AI 插件协议
-7. [`docs/core/strategy_protocol.md`](docs/core/strategy_protocol.md) - 策略交易
-8. [`docs/core/risk_protocol.md`](docs/core/risk_protocol.md) - 风控检查
-9. [`docs/core/backtest_protocol.md`](docs/core/backtest_protocol.md) - 回测/仿真/实盘
-10. [`docs/system/config_protocol.md`](docs/system/config_protocol.md) - 配置管理
-11. [`docs/system/ui_bridge_protocol.md`](docs/system/ui_bridge_protocol.md) - 前后端边界
-12. [`docs/core/golden_examples.md`](docs/core/golden_examples.md) - 黄金样例
-13. [`docs/engineering/engineering_baseline.md`](docs/engineering/engineering_baseline.md) - 工程约束
+**阅读建议：** 新成员建议从 [`architecture.md`](docs/system/architecture.md) 开始，按第一层（核心协议）→ 第二层（系统组织）→ 第三层（工程执行）顺序阅读。
 
 ---
 
@@ -105,18 +78,18 @@ Chronobar 是面向个人量化用户和个人交易用户的期货量化桌面�
 
 | 角色/任务 | 必读文档 | 参考文档 |
 |----------|---------|---------|
-| 🔧 新增核心功能 | [`docs/system/architecture.md`](docs/system/architecture.md) · [`docs/core/data_protocol.md`](docs/core/data_protocol.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) | - |
-| ⚙️ 新增配置项 | [`docs/system/config_protocol.md`](docs/system/config_protocol.md) | - |
-| 🧩 新增插件 | [`docs/core/plugin_protocol.md`](docs/core/plugin_protocol.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) · [`docs/core/data_protocol.md`](docs/core/data_protocol.md) | [`docs/core/golden_examples.md`](docs/core/golden_examples.md) · [`docs/engineering/engineering_baseline.md`](docs/engineering/engineering_baseline.md) |
-| 📊 新增策略 | [`docs/core/strategy_protocol.md`](docs/core/strategy_protocol.md) · [`docs/core/risk_protocol.md`](docs/core/risk_protocol.md) · [`docs/core/backtest_protocol.md`](docs/core/backtest_protocol.md) · [`docs/core/data_protocol.md`](docs/core/data_protocol.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) | [`docs/core/golden_examples.md`](docs/core/golden_examples.md) |
-| 🛡️ 新增风控规则 | [`docs/core/risk_protocol.md`](docs/core/risk_protocol.md) | - |
-| 📈 做回测 | [`docs/core/backtest_protocol.md`](docs/core/backtest_protocol.md) | - |
-| 🎨 改前端体验 | [`docs/system/architecture.md`](docs/system/architecture.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) · [`docs/system/config_protocol.md`](docs/system/config_protocol.md) · [`docs/system/ui_bridge_protocol.md`](docs/system/ui_bridge_protocol.md) | - |
-| ✅ 落代码和提测 | [`docs/engineering/engineering_baseline.md`](docs/engineering/engineering_baseline.md) | - |
-| 👨‍💻 前端开发 | [`docs/system/architecture.md`](docs/system/architecture.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) · [`docs/system/config_protocol.md`](docs/system/config_protocol.md) · [`docs/system/ui_bridge_protocol.md`](docs/system/ui_bridge_protocol.md) | - |
-| ⚡ 核心计算 | [`docs/system/architecture.md`](docs/system/architecture.md) · [`docs/core/data_protocol.md`](docs/core/data_protocol.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) · [`docs/engineering/engineering_baseline.md`](docs/engineering/engineering_baseline.md) | - |
-| 🔌 插件体系 | [`docs/core/plugin_protocol.md`](docs/core/plugin_protocol.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) · [`docs/core/data_protocol.md`](docs/core/data_protocol.md) · [`docs/engineering/engineering_baseline.md`](docs/engineering/engineering_baseline.md) | [`docs/core/golden_examples.md`](docs/core/golden_examples.md) |
-| 💰 策略交易 | [`docs/core/strategy_protocol.md`](docs/core/strategy_protocol.md) · [`docs/core/risk_protocol.md`](docs/core/risk_protocol.md) · [`docs/core/backtest_protocol.md`](docs/core/backtest_protocol.md) · [`docs/core/data_protocol.md`](docs/core/data_protocol.md) · [`docs/core/event_protocol.md`](docs/core/event_protocol.md) | [`docs/core/golden_examples.md`](docs/core/golden_examples.md) |
+| 🔧 新增核心功能 | [architecture.md](docs/system/architecture.md) · [data_protocol.md](docs/core/data_protocol.md) · [event_protocol.md](docs/core/event_protocol.md) | - |
+| ⚙️ 新增配置项 | [config_protocol.md](docs/system/config_protocol.md) | - |
+| 🧩 新增插件 | [plugin_protocol.md](docs/core/plugin_protocol.md) · [event_protocol.md](docs/core/event_protocol.md) · [data_protocol.md](docs/core/data_protocol.md) | [golden_examples.md](docs/core/golden_examples.md) · [engineering_baseline.md](docs/engineering/engineering_baseline.md) |
+| 📊 新增策略 | [strategy_protocol.md](docs/core/strategy_protocol.md) · [risk_protocol.md](docs/core/risk_protocol.md) · [backtest_protocol.md](docs/core/backtest_protocol.md) · [data_protocol.md](docs/core/data_protocol.md) · [event_protocol.md](docs/core/event_protocol.md) | [golden_examples.md](docs/core/golden_examples.md) |
+| 🛡️ 新增风控规则 | [risk_protocol.md](docs/core/risk_protocol.md) | - |
+| 📈 做回测 | [backtest_protocol.md](docs/core/backtest_protocol.md) | - |
+| 🎨 改前端体验 | [architecture.md](docs/system/architecture.md) · [event_protocol.md](docs/core/event_protocol.md) · [config_protocol.md](docs/system/config_protocol.md) · [ui_bridge_protocol.md](docs/system/ui_bridge_protocol.md) | - |
+| ✅ 落代码和提测 | [engineering_baseline.md](docs/engineering/engineering_baseline.md) | - |
+| 👨‍💻 前端开发 | [architecture.md](docs/system/architecture.md) · [event_protocol.md](docs/core/event_protocol.md) · [config_protocol.md](docs/system/config_protocol.md) · [ui_bridge_protocol.md](docs/system/ui_bridge_protocol.md) | - |
+| ⚡ 核心计算 | [architecture.md](docs/system/architecture.md) · [data_protocol.md](docs/core/data_protocol.md) · [event_protocol.md](docs/core/event_protocol.md) · [engineering_baseline.md](docs/engineering/engineering_baseline.md) | - |
+| 🔌 插件体系 | [plugin_protocol.md](docs/core/plugin_protocol.md) · [event_protocol.md](docs/core/event_protocol.md) · [data_protocol.md](docs/core/data_protocol.md) · [engineering_baseline.md](docs/engineering/engineering_baseline.md) | [golden_examples.md](docs/core/golden_examples.md) |
+| 💰 策略交易 | [strategy_protocol.md](docs/core/strategy_protocol.md) · [risk_protocol.md](docs/core/risk_protocol.md) · [backtest_protocol.md](docs/core/backtest_protocol.md) · [data_protocol.md](docs/core/data_protocol.md) · [event_protocol.md](docs/core/event_protocol.md) | [golden_examples.md](docs/core/golden_examples.md) |
 | 🚀 整体推进 | 全部 12 份文档 | 本 README 作为总索引 |
 
 ---
@@ -140,3 +113,5 @@ Chronobar 欢迎社区贡献。详见 [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING
 ## 许可证
 
 本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。
+
+**反馈与讨论：** [GitHub Issues](https://github.com/GeoFound/Chronobar/issues)
