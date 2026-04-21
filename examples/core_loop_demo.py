@@ -44,7 +44,15 @@ def main():
     event_bus.start()
     ui_bridge.start()
 
+    # EventBus verification: subscribe to tick events
+    tick_events_received = []
+
+    def on_tick_event(event):
+        tick_events_received.append(event)
+
+    event_bus.subscribe("tick", on_tick_event)
     print("   ✓ EventBus started")
+    print("   ✓ EventBus subscribed to tick events")
     print("   ✓ RuleEngine initialized")
     print("   ✓ BarAggregator initialized (M1)")
     print("   ✓ IndicatorManager initialized (MA5)")
@@ -97,6 +105,19 @@ def main():
 
     bars = []
     for i, tick in enumerate(ticks):
+        # EventBus verification: publish tick event
+        from core.events import EventEnvelope
+
+        tick_event = EventEnvelope(
+            event_type="tick",
+            event_id=f"tick_{i}",
+            source="demo",
+            ts=tick.datetime,
+            instrument_id=tick.instrument_id,
+            payload=tick,
+        )
+        event_bus.put(tick_event)
+
         # Determine session context
         session_type, segment_start, segment_end = rule_engine.determine_session(
             tick.datetime,
@@ -133,9 +154,13 @@ def main():
     print(f"   Total ticks processed: {len(ticks)}")
     print(f"   Total bars produced: {len(bars)}")
     print(f"   Current MA5: {ma5.value()}")
+    print(f"   EventBus tick events received: {len(tick_events_received)}")
     print()
 
     # Stop components
+    import time
+
+    time.sleep(0.1)  # Allow EventBus to process all events
     event_bus.stop()
     ui_bridge.stop()
 
@@ -143,6 +168,7 @@ def main():
     print()
     print("Data flow verified:")
     print("  Tick → Event (EventBus)")
+    print("  Event → Handler (EventBus dispatch)")
     print("  Tick → Bar (BarAggregator)")
     print("  Bar → Indicator (IndicatorManager)")
     print("  Query → Response (UiBridge)")
