@@ -111,9 +111,8 @@ def main():
         bar = bar_aggregator.on_tick(tick)
         if bar:
             bars.append(bar)
-            print(
-                f"     → Bar produced: {bar.datetime} - OHLC: {bar.open:.2f}/{bar.high:.2f}/{bar.low:.2f}/{bar.close:.2f}"
-            )
+            ohlc_str = f"{bar.open:.2f}/{bar.high:.2f}/{bar.low:.2f}/{bar.close:.2f}"
+            print(f"     → Bar produced: {bar.datetime} - OHLC: {ohlc_str}")
 
             # Update indicators
             indicator_values = indicator_manager.on_bar(bar)
