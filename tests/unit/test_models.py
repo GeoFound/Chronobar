@@ -1,37 +1,19 @@
 """Unit tests for core models."""
 
-from datetime import datetime, date, time
-import pytest
+from datetime import date, datetime
 
 from core.enums import (
-    SessionType,
-    Interval,
-    OrderType,
     Direction,
+    Interval,
     Offset,
     OrderStatus,
-    CancelReasonCode,
-    TimeInForce,
-    RiskCheckType,
-    SignalType,
-    Sentiment,
-    Regime,
+    OrderType,
+    SessionType,
 )
 from core.models import (
-    Tick,
     Bar,
-    Instrument,
-    SessionContext,
     Order,
-    Trade,
-    Position,
-    Account,
-    OrderRequest,
-    CancelRequest,
-    RiskCheckResult,
-    AISignal,
-    SentimentScore,
-    RegimeLabel,
+    Tick,
 )
 
 
@@ -116,14 +98,14 @@ def test_enum_values():
     assert SessionType.MORNING.value == "morning"
     assert SessionType.AFTERNOON.value == "afternoon"
     assert SessionType.NIGHT.value == "night"
-    
+
     assert Interval.TICK.value == "tick"
     assert Interval.M1.value == "1m"
     assert Interval.D1.value == "1d"
-    
+
     assert OrderType.LIMIT.value == "limit"
     assert OrderType.MARKET.value == "market"
-    
+
     assert Direction.LONG.value == "long"
     assert Direction.SHORT.value == "short"
 

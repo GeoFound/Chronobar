@@ -1,22 +1,22 @@
 """Core data models for Chronobar platform."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, date, time
+from datetime import date, datetime, time
 from typing import Any
 
 from core.enums import (
-    SessionType,
-    Interval,
-    OrderType,
+    CancelReasonCode,
     Direction,
+    Interval,
     Offset,
     OrderStatus,
-    CancelReasonCode,
-    TimeInForce,
-    RiskCheckType,
-    SignalType,
-    Sentiment,
+    OrderType,
     Regime,
+    RiskCheckType,
+    Sentiment,
+    SessionType,
+    SignalType,
+    TimeInForce,
 )
 
 
