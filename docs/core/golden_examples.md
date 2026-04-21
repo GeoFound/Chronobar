@@ -776,11 +776,15 @@ class LLMSentimentSignal(BasePlugin):
 
     async def _call_local_llm(self, prompt: str) -> dict:
         """调用本地 LLM"""
-        # 实际实现应使用 transformers 或其他本地推理框架
-        # 这里仅提供示例结构
-        await asyncio.sleep(0.5)  # 模拟推理延迟
+        # TODO: 使用 HostAPI 获取 LLMProvider，不直接 import httpx
+        # llm = self.ctx.get_llm_provider(self.model_provider)
+        # if llm is None or not llm.is_available():
+        #     raise RuntimeError(f"LLM provider {self.model_provider} not available")
+        # response = await llm.complete(prompt, self.max_tokens, self.timeout)
+        # return self._parse_response(response.content)
 
-        # 模拟返回结果
+        # 临时模拟返回结果（实际实现应移除）
+        await asyncio.sleep(0.5)  # 模拟推理延迟
         return {
             "sentiment": "positive",
             "score": 0.3,
@@ -790,16 +794,36 @@ class LLMSentimentSignal(BasePlugin):
 
     async def _call_cloud_llm(self, prompt: str) -> dict:
         """调用云端 LLM"""
-        # 实际实现应使用 httpx 或 aiohttp 调用 API
-        # 这里仅提供示例结构
-        await asyncio.sleep(1.0)  # 模拟网络延迟
+        # TODO: 使用 HostAPI 获取 LLMProvider，不直接 import httpx
+        # llm = self.ctx.get_llm_provider(self.model_provider)
+        # if llm is None or not llm.is_available():
+        #     raise RuntimeError(f"LLM provider {self.model_provider} not available")
+        # response = await llm.complete(prompt, self.max_tokens, self.timeout)
+        # return self._parse_response(response.content)
 
-        # 模拟返回结果
+        # 临时模拟返回结果（实际实现应移除）
+        await asyncio.sleep(1.0)  # 模拟网络延迟
         return {
             "sentiment": "neutral",
             "score": 0.0,
             "confidence": 0.6,
             "tokens": 512
+        }
+
+    def _parse_response(self, raw: str) -> dict:
+        """解析 LLM 响应"""
+        # TODO: 使用 orjson.loads + 异常捕获，返回标准化 dict
+        # import orjson
+        # try:
+        #     return orjson.loads(raw)
+        # except Exception:
+        #     return {"sentiment": "neutral", "score": 0.0, "confidence": 0.0}
+
+        # 临时模拟解析（实际实现应移除）
+        return {
+            "sentiment": "neutral",
+            "score": 0.0,
+            "confidence": 0.6
         }
 
     def outputs(self) -> dict:

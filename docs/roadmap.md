@@ -78,6 +78,7 @@
 - 🔄 信号插件示例（双均线信号）
 - 🔄 插件 manifest 校验
 - 🔄 插件隔离机制（进程级或沙箱）
+- 🔄 **MockLLMProvider 实现**（验证 AI 协议 HostAPI 依赖路径，使 llm_sentiment_signal 样例可在本地无网络环境下运行通过测试）
 
 ### 验收标准
 

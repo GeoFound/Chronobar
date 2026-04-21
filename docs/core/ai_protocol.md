@@ -200,6 +200,69 @@ AI 风控检查器只能发出以下事件：
 - `openai`：OpenAI API
 - `anthropic`：Anthropic API
 
+### 7.3 LLMProvider 接口协议
+
+AI 插件不得直接调用 HTTP 接口访问 LLM API，必须通过 HostAPI 获取 LLMProvider 实例。这确保了统一的 token 消耗控制、超时管理和可测试性。
+
+```python
+from typing import Protocol, runtime_checkable
+
+@dataclass(slots=True)
+class LLMResponse:
+    """LLM 响应对象"""
+    content: str
+    tokens_used: int
+    model: str
+    provider: str
+
+@runtime_checkable
+class LLMProvider(Protocol):
+    """LLM 提供商接口协议"""
+
+    async def complete(
+        self,
+        prompt: str,
+        max_tokens: int,
+        timeout: float,
+        temperature: float = 0.7
+    ) -> LLMResponse:
+        """
+        异步调用 LLM 完成任务
+
+        参数：
+            prompt: 提示词
+            max_tokens: 最大 token 数
+            timeout: 超时时间（秒）
+            temperature: 温度参数（0.0-1.0）
+
+        返回：
+            LLMResponse 对象
+
+        异常：
+            TimeoutError: 调用超时
+            RuntimeError: API 错误
+        """
+        ...
+
+    def get_provider_name(self) -> str:
+        """返回提供商名称"""
+        ...
+
+    def is_available(self) -> bool:
+        """检查提供商是否可用"""
+        ...
+
+    def estimate_tokens(self, text: str) -> int:
+        """估算文本的 token 数量"""
+        ...
+```
+
+**约束：**
+- AI 插件必须通过 `PluginContext.get_llm_provider(provider_name)` 获取 LLMProvider 实例
+- 禁止 AI 插件直接 import httpx、aiohttp 等 HTTP 库
+- LLMProvider 实现由核心提供，支持 MockLLMProvider 用于测试
+- 调用此方法需要 `call_external_api: true` 权限
+
 ## 8. 安全约束
 
 ### 8.1 权限约束

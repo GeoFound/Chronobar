@@ -214,7 +214,14 @@ class PluginContext(Protocol):
     def publish_alert(self, level: str, title: str, content: str) -> None: ...
     def write_cache(self, key: str, value: object) -> None: ...
     def read_cache(self, key: str) -> object | None: ...
+    def get_llm_provider(self, provider_name: str) -> object | None: ...
 ```
+
+**get_llm_provider() 说明：**
+- 获取 LLM 提供商实例（仅 ai-agent 类型插件可用）
+- 调用此方法需要 `call_external_api: true` 权限，否则返回 None 并记录拒绝日志
+- 返回的 LLMProvider 实例遵循 [`ai_protocol.md`](ai_protocol.md) 第 7.3 节定义的接口协议
+- 支持的 provider_name: local, deepseek, openai, anthropic
 
 ## 8. 权限模型
 
