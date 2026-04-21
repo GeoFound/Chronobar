@@ -8,8 +8,8 @@
 [![Docs](https://img.shields.io/badge/Docs-M1%20Baseline-blue)](docs/)
 [![Stars](https://img.shields.io/github/stars/GeoFound/Chronobar?style=social)](https://github.com/GeoFound/Chronobar)
 
-> 🚧 **当前状态：M1 基线收敛中**
-> 协议文档、默认配置、Schema 与基础测试/CI 已入仓，核心运行时代码将在 M2 开始。Star 关注进展 →
+> 🚧 **当前状态：P1 核心闭环完成**
+> M1 基线已收敛，P1 核心闭环（Tick → Event → Bar → Indicator → UiBridge）已实现并验证。Star 关注进展 →
 
 ## 平台简介
 
