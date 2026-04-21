@@ -2,7 +2,7 @@
 
 This document tracks version changes across all protocol documents.
 
-## v1.2 (2024-04-21)
+## v1.2 (2026-04-21)
 
 ### Strategic Decisions
 - **Target Users**: Personal quant users and personal trading users
