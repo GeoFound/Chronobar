@@ -263,7 +263,92 @@ futures_platform/
 - integration test
 - ui contract test
 
-## 9. 交付标准
+## 9. PR 流程规范
+
+### 9.1 提交流程要求
+
+**禁止直接 push 到 main 分支**
+
+所有代码变更（包括文档修改）必须通过 Pull Request 流程：
+1. 从 main 分支创建 feature 分支
+2. 在 feature 分支上进行开发和测试
+3. 提交 Pull Request 到 main 分支
+4. 通过 Code Review 后合并
+
+**分支命名规范**
+- feature/功能描述（如：feature/ai-protocol-extension）
+- fix/问题描述（如：fix/gateway-reconnect-logic）
+- docs/文档描述（如：docs/readme-restructuring）
+
+### 9.2 PR 提交要求
+
+每个 PR 必须包含：
+- 清晰的标题（使用 PR 模板）
+- 变更描述（解决了什么问题、如何解决）
+- 关联的 Issue（如有）
+- 测试结果（代码变更必须包含测试）
+- 文档更新（协议变更必须同步更新文档）
+
+**禁止的行为：**
+- 单次 PR 包含多个不相关的变更
+- PR 描述为空或过于简略
+- 跳过 Code Review 直接合并
+- 在 PR 中进行迭代式小修改（应在本地完成后再提交）
+
+### 9.3 Code Review 要求
+
+**Review 检查清单：**
+- [ ] 代码符合工程基线（类型检查、命名规范、异常处理）
+- [ ] 测试覆盖率达标（核心模块 ≥80%，协议层 ≥95%）
+- [ ] 协议变更已同步更新文档
+- [ ] 配置变更已同步更新 schema 和 migration
+- [ ] AI 生成代码已通过声明模板验证
+- [ ] 无不必要的依赖引入
+- [ ] 日志记录充分且结构化
+
+**Review 流程：**
+- 至少一名 Reviewer 批准方可合并
+- Reviewer 必须对变更内容有理解
+- Review 意见必须被 Address 或明确拒绝
+- 重大变更需至少两名 Reviewer 批准
+
+### 9.4 Commit 规范
+
+**Commit 信息格式：**
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Type 类型：**
+- feat: 新功能
+- fix: 修复 bug
+- docs: 文档变更
+- style: 代码格式（不影响功能）
+- refactor: 重构
+- test: 测试相关
+- chore: 构建/工具链相关
+
+**示例：**
+```
+feat(ai): add ai-agent plugin type and manifest example
+
+Add ai-agent as the 5th plugin layer with controlled agent semantics.
+Includes manifest example, dataclass definitions, and test requirements.
+
+Closes #123
+```
+
+**禁止的行为：**
+- 连续小提交（应在本地使用 git rebase squash 合并）
+- 空白 commit 信息
+- commit 信息与变更内容不符
+- 将多个不相关变更混在同一 commit
+
+## 10. 交付标准
 
 一个功能只有满足以下条件才算完成：
 
@@ -275,9 +360,9 @@ futures_platform/
 6. 回放可复现
 7. 文档已更新
 
-## 10. AI 协作约束
+## 11. AI 协作约束
 
-### 10.1 生成前声明模板
+### 11.1 生成前声明模板
 
 AI 在生成代码前必须声明：
 
@@ -290,7 +375,7 @@ AI 在生成代码前必须声明：
 - 禁止事项：不得新增重复模型，不得跨层直接调用未授权对象
 ```
 
-### 10.2 生成约束
+### 11.2 生成约束
 
 - AI 生成代码不得绕过协议文档
 - AI 生成新功能必须先声明所属层级
@@ -299,9 +384,9 @@ AI 在生成代码前必须声明：
 - AI 生成桥接接口必须同步更新契约说明
 - AI 生成代码在合并前必须通过测试与类型检查
 
-## 11. 存储层技术决策
+## 12. 存储层技术决策
 
-### 11.1 历史 Tick 存储
+### 12.1 历史 Tick 存储
 
 - **技术选型**：DuckDB + Parquet 双层架构
 - **实时写入路径**：GatewayAdapter → TickCache (内存 deque) → 定时落盘 → Parquet 文件（按交易日分片）
@@ -309,26 +394,26 @@ AI 在生成代码前必须声明：
 - **Parquet 文件**：按 instrument_id/trading_date.parquet 分片存储，支持时间分区裁剪
 - **DuckDB**：作为查询引擎直接读取 Parquet，不额外存储数据，仅作为 SQL 计算层使用
 
-### 11.2 元数据存储
+### 12.2 元数据存储
 
 - 合约基础信息、交易日历、策略参数等小表继续使用 SQLite
 - DuckDB + Parquet 专门处理 Tick 时序数据
 
-### 11.3 禁止事项
+### 12.3 禁止事项
 
 - 禁止使用 TimescaleDB（需服务进程，违反单进程原则）
 - 禁止使用 InfluxDB（需服务进程，版权复杂）
 - 禁止将 SQLite 用于 Tick 历史数据存储（量级天花板低）
 
-## 12. pyproject.toml 基线
+## 13. pyproject.toml 基线
 
-### 12.1 Python 版本
+### 13.1 Python 版本
 
 ```
 requires-python = ">=3.11,<3.13"
 ```
 
-### 12.2 Runtime 必选依赖
+### 13.2 Runtime 必选依赖
 
 ```
 pydantic>=2.5,<3
@@ -341,7 +426,7 @@ typing-extensions>=4.9,<5
 tenacity>=8.2,<9
 ```
 
-### 12.3 Dev 必选依赖
+### 13.3 Dev 必选依赖
 
 ```
 pytest
