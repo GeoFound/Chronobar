@@ -310,6 +310,37 @@ class CancelRequest:
     gateway_order_id: str | None = None
     reference: str | None = None
     extra: dict[str, Any] | None = None
+
+@dataclass(slots=True)
+class AISignal:
+    signal_id: str
+    signal_type: str  # enum: sentiment, regime, factor, anomaly
+    source: str  # AI 模型名称
+    confidence: float  # 0.0 - 1.0
+    timestamp: datetime
+    instrument_id: str | None = None
+    value: float | None = None
+    label: str | None = None
+    metadata: dict[str, Any] | None = None
+
+@dataclass(slots=True)
+class SentimentScore:
+    instrument_id: str
+    source: str  # 新闻源、公告源等
+    sentiment: str  # enum: positive, negative, neutral
+    score: float  # -1.0 到 1.0
+    confidence: float  # 0.0 - 1.0
+    timestamp: datetime
+    keywords: list[str] | None = None
+
+@dataclass(slots=True)
+class RegimeLabel:
+    instrument_id: str | None  # null 表示市场整体状态
+    regime: str  # enum: trend, range, high_volatility, low_volatility, transition
+    confidence: float  # 0.0 - 1.0
+    duration: int  # 预计持续周期数
+    timestamp: datetime
+    metadata: dict[str, Any] | None = None
 ```
 
 ## 8. 交易执行数据协议
@@ -520,3 +551,6 @@ RegimeLabel:
 - Position 增量更新测试。
 - Account 资金流水平衡测试。
 - RiskCheckResult 拦截逻辑测试。
+- AISignal 序列化/反序列化测试。
+- SentimentScore.score 边界值测试（-1.0 到 1.0）。
+- RegimeLabel.confidence 范围校验测试（0.0 到 1.0）。

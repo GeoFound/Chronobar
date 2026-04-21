@@ -116,6 +116,14 @@ class BacktestEngine(ABC):
     def export_report(self, path: str) -> None:
         """导出回测报告"""
         ...
+
+    def on_backtest_complete(self, result: BacktestResult) -> None:
+        """回测完成回调，用于触发 AI 分析师等后处理
+
+        可选实现，用于在回测完成后触发 AI 回测分析师生成自然语言解读。
+        AI 分析结果应写入 result.ai_summary 字段。
+        """
+        ...
 ```
 
 ### 4.2 OrderMatcher 接口
@@ -276,6 +284,12 @@ def calculate_commission(self, trade: Trade) -> float:
    - 持仓分布图
    - 盈亏分布图
 
+6. **AI 分析**（可选）
+   - 策略逻辑的自然语言解读
+   - 参数过拟合风险检测
+   - 与历史市场状态的对应关系分析
+   - AI 分析结果存储在 `BacktestResult.ai_summary` 字段
+
 ### 8.2 报告格式
 
 支持多种报告格式：
@@ -430,6 +444,7 @@ class BacktestResult:
     trade_details: list[dict[str, Any]]
     equity_curve: list[dict[str, Any]]
     metrics: dict[str, Any]
+    ai_summary: str | None = None  # AI 回测分析师生成的自然语言解读
 
 class BacktestEngine:
     def __init__(self):

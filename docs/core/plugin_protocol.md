@@ -181,7 +181,41 @@ plugin_name/
 }
 ```
 
-### 5.5 依赖加载策略
+### 5.5 AI 智能体插件 manifest
+
+```json
+{
+  "name": "llm_sentiment_signal",
+  "version": "1.0.0",
+  "api_version": "1.2",
+  "kind": "ai-agent",
+  "entry": "plugin.py",
+  "ai_capabilities": ["sentiment", "regime"],
+  "permissions": {
+    "read_market_data": true,
+    "emit_alert": true,
+    "write_file": false,
+    "read_workspace": false,
+    "call_external_api": true
+  },
+  "ai_config": {
+    "model_provider": "local",
+    "max_tokens": 1024,
+    "timeout": 10
+  },
+  "compatibility": {
+    "min_core_version": "1.2",
+    "max_core_version": "1.x"
+  }
+}
+```
+
+**说明：**
+- `ai_capabilities`：AI 插件具备的能力列表（sentiment、regime、factor、anomaly）
+- `permissions.call_external_api`：AI 插件独有的网络外呼权限，用于调用 LLM API
+- `ai_config`：AI 模型配置（模型提供商、最大 token、超时时间）
+
+### 5.6 依赖加载策略
 
 **depends_on 字段处理：**
 

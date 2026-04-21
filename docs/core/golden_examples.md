@@ -25,7 +25,7 @@
 
 ## 1. 文档定位
 
-本文档提供 4 个黄金样例：MA 指标插件、双均线信号插件、仿真策略插件、回放测试用例。
+本文档提供 5 个黄金样例：MA 指标插件、双均线信号插件、仿真策略插件、AI 情感信号插件、回放测试用例。
 这些样例作为 AI 生成代码的参考模板，确保代码风格和接口使用的一致性。
 
 **重要：** 本文档基于协议版本 v1.2 编写。每次协议 major/minor 升级时，必须同步更新样例代码中的字段定义和接口使用方式。
@@ -592,9 +592,268 @@ class DualMAStrategy(BaseStrategy):
         }
 ```
 
-## 5. 样例 4：回放测试用例
+## 5. 样例 4：AI 情感信号插件
 
-### 5.1 测试文件结构
+### 5.1 目录结构
+
+```text
+llm_sentiment_signal/
+  manifest.json
+  plugin.py
+  README.md
+```
+
+### 5.2 manifest.json
+
+```json
+{
+  "name": "llm_sentiment_signal",
+  "version": "1.0.0",
+  "api_version": "1.2",
+  "kind": "ai-agent",
+  "entry": "plugin.py",
+  "ai_capabilities": ["sentiment"],
+  "permissions": {
+    "read_market_data": true,
+    "emit_alert": true,
+    "write_file": false,
+    "read_workspace": false,
+    "call_external_api": true
+  },
+  "ai_config": {
+    "model_provider": "local",
+    "max_tokens": 1024,
+    "timeout": 10
+  },
+  "compatibility": {
+    "min_core_version": "1.2",
+    "max_core_version": "1.x"
+  }
+}
+```
+
+### 5.3 plugin.py
+
+```python
+import asyncio
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any
+from collections import deque
+
+from chronobar.core.data_protocol import Bar, AISignal
+from chronobar.core.plugin_protocol import BasePlugin, PluginContext
+
+@dataclass(slots=True)
+class LLMSentimentSignal(BasePlugin):
+    """LLM 情感信号插件"""
+
+    model_provider: str = "local"
+    max_tokens: int = 1024
+    timeout: int = 10
+    news_buffer: deque = field(default_factory=lambda: deque(maxlen=10))
+    last_analysis_time: datetime = None
+
+    def manifest(self) -> dict:
+        return {
+            "name": "llm_sentiment_signal",
+            "version": "1.0.0",
+            "api_version": "1.2",
+            "kind": "ai-agent"
+        }
+
+    def on_init(self, ctx: PluginContext) -> None:
+        """初始化 AI 模型配置"""
+        config = ctx.get_config("llm_sentiment_signal")
+        if config:
+            self.model_provider = config.get("model_provider", "local")
+            self.max_tokens = config.get("max_tokens", 1024)
+            self.timeout = config.get("timeout", 10)
+
+        ctx.subscribe("BAR", self._on_bar)
+        ctx.log_info(f"LLM情感信号插件初始化，模型提供商={self.model_provider}")
+
+    def on_start(self, ctx: PluginContext) -> None:
+        """启动插件"""
+        ctx.log_info("LLM情感信号插件启动")
+
+    def on_stop(self, ctx: PluginContext) -> None:
+        """停止插件"""
+        ctx.log_info("LLM情感信号插件停止")
+
+    def _on_bar(self, ctx: PluginContext, event: Any) -> None:
+        """处理 Bar 事件"""
+        bar: Bar = event.payload
+        if bar.instrument_id not in ctx.get_config("watchlist", []):
+            return
+
+        # 模拟新闻数据（实际应从外部新闻源获取）
+        self.news_buffer.append({
+            "instrument_id": bar.instrument_id,
+            "datetime": bar.datetime,
+            "news": f"{bar.instrument_id} 价格波动 {bar.close - bar.open:.2f}"
+        })
+
+        # 每 10 根 K 线分析一次
+        if len(self.news_buffer) >= 10:
+            asyncio.create_task(self._analyze_sentiment(ctx, bar.instrument_id))
+
+    async def _analyze_sentiment(self, ctx: PluginContext, instrument_id: str) -> None:
+        """异步调用 LLM 分析情感"""
+        try:
+            # 构建分析提示
+            prompt = self._build_prompt(instrument_id)
+
+            # 调用 LLM（本地或云端）
+            sentiment_result = await self._call_llm(prompt)
+
+            # 封装为 AISignal 对象
+            ai_signal = AISignal(
+                signal_id=f"sentiment_{instrument_id}_{datetime.now().timestamp()}",
+                signal_type="sentiment",
+                source=self.model_provider,
+                confidence=sentiment_result.get("confidence", 0.5),
+                timestamp=datetime.now(),
+                instrument_id=instrument_id,
+                value=sentiment_result.get("score", 0.0),
+                label=sentiment_result.get("label", "neutral"),
+                metadata={
+                    "model": self.model_provider,
+                    "prompt_length": len(prompt),
+                    "tokens_used": sentiment_result.get("tokens", 0)
+                }
+            )
+
+            # 输出到事件总线
+            ctx.emit("EVENT_AI_SIGNAL", ai_signal)
+            ctx.log_info(f"AI情感信号生成: {instrument_id} {ai_signal.label} (confidence={ai_signal.confidence:.2f})")
+
+        except asyncio.TimeoutError:
+            ctx.log_error(f"LLM调用超时: {instrument_id}")
+            ctx.emit("PLUGIN_ERROR", {
+                "plugin": "llm_sentiment_signal",
+                "error_type": "timeout",
+                "message": f"LLM调用超时 (timeout={self.timeout}s)"
+            })
+
+        except Exception as e:
+            ctx.log_error(f"LLM调用失败: {e}")
+            ctx.emit("PLUGIN_ERROR", {
+                "plugin": "llm_sentiment_signal",
+                "error_type": "llm_error",
+                "message": str(e)
+            })
+
+    def _build_prompt(self, instrument_id: str) -> str:
+        """构建 LLM 分析提示"""
+        news_text = "\n".join([
+            f"[{item['datetime']}] {item['news']}"
+            for item in self.news_buffer
+            if item['instrument_id'] == instrument_id
+        ])
+
+        prompt = f"""请分析以下关于 {instrument_id} 的新闻情感：
+
+{news_text}
+
+请返回 JSON 格式：
+{{
+  "sentiment": "positive|negative|neutral",
+  "score": -1.0 到 1.0 之间的数值（负数表示负面，正数表示正面），
+  "confidence": 0.0 到 1.0 之间的置信度
+}}
+"""
+        return prompt
+
+    async def _call_llm(self, prompt: str) -> dict:
+        """调用 LLM（本地或云端）"""
+        if self.model_provider == "local":
+            # 本地模型调用（如 Qwen2.5-Coder）
+            return await self._call_local_llm(prompt)
+        else:
+            # 云端 API 调用（如 DeepSeek、OpenAI）
+            return await self._call_cloud_llm(prompt)
+
+    async def _call_local_llm(self, prompt: str) -> dict:
+        """调用本地 LLM"""
+        # 实际实现应使用 transformers 或其他本地推理框架
+        # 这里仅提供示例结构
+        await asyncio.sleep(0.5)  # 模拟推理延迟
+
+        # 模拟返回结果
+        return {
+            "sentiment": "positive",
+            "score": 0.3,
+            "confidence": 0.7,
+            "tokens": 256
+        }
+
+    async def _call_cloud_llm(self, prompt: str) -> dict:
+        """调用云端 LLM"""
+        # 实际实现应使用 httpx 或 aiohttp 调用 API
+        # 这里仅提供示例结构
+        await asyncio.sleep(1.0)  # 模拟网络延迟
+
+        # 模拟返回结果
+        return {
+            "sentiment": "neutral",
+            "score": 0.0,
+            "confidence": 0.6,
+            "tokens": 512
+        }
+
+    def outputs(self) -> dict:
+        return {
+            "sentiment_signal": {
+                "type": "signal",
+                "description": "LLM 情感分析信号"
+            }
+        }
+
+    def schema(self) -> dict:
+        return {
+            "parameters": {
+                "model_provider": {
+                    "type": "string",
+                    "enum": ["local", "deepseek", "openai", "anthropic"],
+                    "default": "local",
+                    "description": "LLM 模型提供商"
+                },
+                "max_tokens": {
+                    "type": "int",
+                    "min": 256,
+                    "max": 8192,
+                    "default": 1024,
+                    "description": "最大 token 数"
+                },
+                "timeout": {
+                    "type": "int",
+                    "min": 5,
+                    "max": 60,
+                    "default": 10,
+                    "description": "超时时间（秒）"
+                }
+            }
+        }
+```
+
+### 5.4 使用说明
+
+**重要约束：**
+- LLM 调用必须异步执行，避免阻塞主线程
+- 必须处理超时和异常，转换为 PLUGIN_ERROR 事件
+- AI 信号必须封装为 AISignal 对象，通过事件总线输出
+- 禁止直接操作仓位，只能输出信号供策略参考
+- 回放模式下 AI 信号应从历史日志恢复，不重新推理
+
+**性能考虑：**
+- LLM 调用耗时较长，建议使用本地模型或缓存结果
+- 控制调用频率，避免过度消耗 token
+- 使用超时机制防止长时间阻塞
+
+## 6. 样例 5：回放测试用例
+
+### 6.1 测试文件结构
 
 ```text
 tests/
@@ -603,7 +862,7 @@ tests/
     rb2501_1m_20240101.parquet
 ```
 
-### 5.2 test_replay_dual_ma.py
+### 6.2 test_replay_dual_ma.py
 
 ```python
 import pytest
@@ -739,9 +998,9 @@ if __name__ == "__main__":
     pytest.main([__file__, "-v"])
 ```
 
-## 6. 样例使用说明
+## 7. 样例使用说明
 
-### 6.1 安装插件
+### 7.1 安装插件
 
 ```bash
 # 复制插件目录到 plugins 目录
@@ -750,7 +1009,7 @@ cp -r dual_ma_signal/ plugins/
 cp -r dual_ma_strategy/ plugins/
 ```
 
-### 6.2 配置插件
+### 7.2 配置插件
 
 在系统配置文件中添加插件配置：
 
@@ -777,7 +1036,7 @@ cp -r dual_ma_strategy/ plugins/
 }
 ```
 
-### 6.3 运行回测
+### 7.3 运行回测
 
 ```bash
 # 运行回放测试
@@ -787,7 +1046,7 @@ python tests/test_replay_dual_ma.py
 chronobar backtest --strategy dual_ma_strategy --start 2024-01-01 --end 2024-01-31
 ```
 
-### 6.4 查看回测报告
+### 7.4 查看回测报告
 
 回测完成后，查看生成的 HTML 报告：
 
@@ -796,9 +1055,9 @@ chronobar backtest --strategy dual_ma_strategy --start 2024-01-01 --end 2024-01-
 open output/backtest_reports/dual_ma_strategy_20240101_20240131.html
 ```
 
-## 7. 扩展建议
+## 8. 扩展建议
 
-### 7.1 添加更多指标
+### 8.1 添加更多指标
 
 参考 MA 指标插件，可以添加：
 - MACD 指标
@@ -806,7 +1065,7 @@ open output/backtest_reports/dual_ma_strategy_20240101_20240131.html
 - 布林带指标
 - KDJ 指标
 
-### 7.2 添加更多信号
+### 8.2 添加更多信号
 
 参考双均线信号插件，可以添加：
 - 突破信号
@@ -814,7 +1073,7 @@ open output/backtest_reports/dual_ma_strategy_20240101_20240131.html
 - 动量信号
 - 波动率信号
 
-### 7.3 添加更多策略
+### 8.3 添加更多策略
 
 参考双均线策略插件，可以添加：
 - 网格策略
@@ -822,7 +1081,7 @@ open output/backtest_reports/dual_ma_strategy_20240101_20240131.html
 - 套利策略
 - 做市策略
 
-### 7.4 添加更多测试
+### 8.4 添加更多测试
 
 参考回放测试用例，可以添加：
 - 参数优化测试

@@ -218,7 +218,26 @@ def migrate_config(data: dict, from_version: str, to_version: str) -> dict: ...
         "log_level": {"type": "string"},
         "cache_dir": {"type": "string"},
         "db_url": {"type": "string"},
-        "ui_backend": {"type": "string"}
+        "ui_backend": {"type": "string"},
+        "ai": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "model_provider": {"type": "string"},
+            "local_model_path": {"type": "string"},
+            "api_endpoint": {"type": "string"},
+            "api_key": {"type": "string"},
+            "max_tokens": {"type": "integer"},
+            "timeout": {"type": "integer"},
+            "temperature": {"type": "number"},
+            "enable_copilot": {"type": "boolean"},
+            "enable_signal_generation": {"type": "boolean"},
+            "enable_risk_check": {"type": "boolean"},
+            "enable_backtest_analysis": {"type": "boolean"},
+            "enable_auto_tuning": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     }

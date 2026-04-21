@@ -47,8 +47,8 @@
 它定义 BaseGateway 接口（connect、disconnect、subscribe、submit_order、cancel_order、query_account、query_position、query_orders）、GatewayCallback 接口、GatewayStatus 枚举、重连策略和回调映射约束，确保不同交易所网关（CTP、OpenCTP、SimNow、模拟网关）接口兼容。
 
 ### `core/data_protocol.md`
-回答“系统内部到底交换什么对象”的问题。  
-它定义 Tick、Bar、Instrument、SessionContext 等标准对象，是接口层、规则层、计算层、展示层、插件层之间的共同语言。
+回答"模块之间交换什么数据"的问题。  
+它定义 Tick、Bar、Instrument、SessionContext 等标准对象，以及 AI 相关对象（AISignal、SentimentScore、RegimeLabel），是接口层、规则层、计算层、展示层、插件层之间的共同语言。
 
 ### `core/event_protocol.md`
 回答“模块之间默认怎么通信”的问题。  
@@ -59,12 +59,12 @@
 它定义系统配置、市场配置、规则配置、指标配置、工作区配置，以及 schema 校验和 migration 规则。
 
 ### `core/plugin_protocol.md`
-回答“扩展能力怎么接入、权限怎么控制、输出怎么进入系统”的问题。  
-它定义插件目录结构、生命周期、manifest、Host API、权限模型和输出契约。
+回答"扩展能力怎么接入、权限怎么控制、输出怎么进入系统"的问题。  
+它定义插件目录结构、生命周期、manifest、Host API、权限模型和输出契约，包含 5 层插件分类（indicator、signal、strategy、ui-extension、ai-agent）。
 
 ### `core/strategy_protocol.md`
 回答"策略插件如何安全参与交易执行"的问题。  
-它定义策略 Host API（submit_order、cancel_order、get_positions、get_account）、4 层插件分类（indicator、signal、strategy、ui-extension）、交易权限模型和回测一致性保证。
+它定义策略 Host API（submit_order、cancel_order、get_positions、get_account）、5 层插件分类（indicator、signal、strategy、ui-extension、ai-agent）、交易权限模型和回测一致性保证。
 
 ### `core/risk_protocol.md`
 回答"交易前如何进行风控检查"的问题。  
@@ -185,7 +185,7 @@ core/event_protocol.md
  └── 定义系统默认协作总线（包含交易执行事件）
 
 core/plugin_protocol.md
- └── 定义扩展能力接入方式（4 层插件分类）
+ └── 定义扩展能力接入方式（5 层插件分类）
 
 core/strategy_protocol.md
  └── 定义策略插件接口和 Host API
@@ -245,6 +245,7 @@ engineering/engineering_baseline.md
 - 默认协作通道是事件总线，不是跨层直连。
 - 展示层只消费标准结果，不直接依赖网关私有字段。
 - 插件是受控扩展单元，不是任意脚本入口。
+- AI 插件是受控智能体，不是自主决策单元，必须通过 HostAPI 与核心交互，不能绕过风控直接操盘。
 - 配置必须可迁移，回放必须可复验，日志必须可追踪。
 - React 前端体验可以持续升级，但不能反向污染核心边界。
 

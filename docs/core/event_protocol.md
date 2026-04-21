@@ -145,6 +145,25 @@ EVENT_REGIME_CHANGE
 }
 ```
 
+### 4.4 AI 事件 replayable 策略
+
+AI 事件的 replayable 标注需要区分两种运行模式：
+
+**历史回放模式（replayable = True）：**
+- AI 信号从历史日志恢复，不重新调用 LLM
+- 用于回测复验，确保 AI 信号触发时序可重建
+- 回放时必须从日志读取历史 AI 信号，禁止实时推理
+
+**实时/仿真模式（replayable = False）：**
+- AI 信号实时生成，调用 LLM 推理
+- 用于实盘交易或实时仿真
+- 实时模式下 AI 信号不进入回放日志
+
+**重要约束：**
+- 回测一致性要求 AI 信号必须可复验，因此历史回放模式下 AI 事件必须可回放
+- 实时模式下 AI 信号不进入回放日志，避免重复推理和成本浪费
+- 系统应根据运行模式自动切换 AI 事件的 replayable 行为
+
 ## 5. 路由规则
 
 ### 5.1 事件 replayable 标注
@@ -192,8 +211,8 @@ EVENT_REGIME_CHANGE
 | REPLAY_STARTED | False | 回放开始事件不应在回放时重放 |
 | REPLAY_FINISHED | False | 回放结束事件不应在回放时重放 |
 | REPLAY_PROGRESS | False | 回放进度事件不应在回放时重放 |
-| EVENT_AI_SIGNAL | False | AI 信号事件不应在回放时重放 |
-| EVENT_REGIME_CHANGE | False | 市场状态变更事件不应在回放时重放 |
+| EVENT_AI_SIGNAL | Mode-dependent | 历史回放模式 True，实时模式 False（见 §4.4） |
+| EVENT_REGIME_CHANGE | Mode-dependent | 历史回放模式 True，实时模式 False（见 §4.4） |
 
 ### 5.2 默认规则
 
