@@ -98,7 +98,7 @@ This document tracks version changes across all protocol documents, following [K
 - Added test coverage targets (core ≥80%, protocol ≥95%)
 - Added AI collaboration constraints with pre-generation declaration template
 - Added storage layer technical decision (DuckDB + Parquet)
-- Added pyproject.toml baseline (Python 3.11+, dependency tiers)
+- Added pyproject.toml baseline (Python 3.14+, dependency tiers)
 - Added strict file-level ordering in development phase 2
 
 ### README.md
