@@ -110,6 +110,17 @@ graph LR
 
 ---
 
+## AI Assistant 补充设计文档
+
+以下两份文档用于定义 Chronobar 的 AI Assistant 产品蓝图。它们是对现有协议与系统架构的补充设计，不改变 M1 正式基线文档数量。
+
+| 文档 | 核心职责 | 适用阶段 |
+|------|---------|---------|
+| [`docs/system/ai_assistant_architecture.md`](docs/system/ai_assistant_architecture.md) | 定义 AI Assistant 的九层模型、最小运行链路、治理与评测边界 | M2+ 设计与实施 |
+| [`docs/system/ai_assistant_product_contract.md`](docs/system/ai_assistant_product_contract.md) | 定义能力边界、来源显示、动作分级、拒答与确认点等产品契约 | M2+ 产品设计 |
+
+---
+
 ## 核心共识
 
 | ✅ 我们这样做 | ❌ 我们不这样做 |
