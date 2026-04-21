@@ -1,13 +1,12 @@
 """Unit tests for event engine."""
 
 import time
-
 from datetime import datetime
 
 import pytest
 
-from core.events import EventEnvelope
 from core.event_engine import EventBus, EventBusError
+from core.events import EventEnvelope
 
 
 def test_event_envelope_creation():

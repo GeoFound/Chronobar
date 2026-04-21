@@ -1,16 +1,12 @@
 """Event engine implementation for Chronobar platform."""
 
+import logging
 import queue
 import threading
-import uuid
-import logging
 from collections.abc import Callable
-from datetime import datetime
-from typing import Any
 
 from core.events import EventEnvelope
 from core.exceptions import ChronobarError
-
 
 logger = logging.getLogger(__name__)
 
