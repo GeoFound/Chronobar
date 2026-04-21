@@ -395,3 +395,31 @@ apscheduler
 - 回放结果与实时结果一致
 - 配置迁移可自动完成
 - 关键模块通过 pytest、mypy、tsc 和契约测试检查
+
+## 15. 成熟项目参考
+
+根据 Chronobar 的技术栈和定位，以下成熟项目有明确借鉴价值：
+
+### 核心架构参考
+
+| 项目 | 借鉴点 |
+|------|--------|
+| **vn.py** | 中国期货事件驱动架构的事实标准；BaseGateway 接口设计、MainEngine 协调模式、CTP 回调映射均是 Chronobar 同类问题的成熟解 |
+| **backtrader** | 回测引擎的 Broker 抽象、数据 Feed 接口、策略生命周期设计，与 backtest_protocol.md 高度重叠 |
+| **nautilus_trader** | Rust/Python 混合架构、强类型 Protocol 定义、回放一致性设计，与 Chronobar 技术方向最接近 |
+
+### UI/前端参考
+
+| 项目 | 借鉴点 |
+|------|--------|
+| **TradingView Lightweight Charts** | K 线图表组件的标准实现，React 集成方案成熟 |
+| **OpenBB Terminal** | 桌面金融终端的工作区布局、面板管理、插件体系 |
+
+### 工程规范参考
+
+| 项目 | 借鉴点 |
+|------|--------|
+| **Pydantic** | 与 data_protocol.md 中的强类型对象定义直接对应；迁移验证（model_validator）可用于 config migration |
+| **FastAPI** | UiBridge 的 HTTP + WebSocket 边界实现的最佳实践 |
+
+**注意：** 以上项目作为参考，不意味着直接复制代码或架构。Chronobar 的设计决策应基于自身需求（桌面客户端、Tauri + React + Python sidecar、DuckDB + Parquet 存储）独立评估后确定。
