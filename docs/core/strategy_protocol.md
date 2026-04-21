@@ -33,7 +33,7 @@ strategy_name/
 {
   "name": "dual_ma_strategy",
   "version": "1.0.0",
-  "api_version": "1.0",
+  "api_version": "1.2",
   "kind": "strategy",
   "entry": "strategy.py",
   "dependencies": [],
@@ -75,6 +75,10 @@ def on_risk_event(ctx, event) -> None: ...
 def outputs() -> dict: ...
 def schema() -> dict: ...
 ```
+
+**说明：**
+- 策略插件不包含通用 `on_event` 回调（基础插件协议有），因为策略插件有专用的强类型回调（on_tick、on_bar、on_order、on_trade、on_risk_event），足以覆盖所有策略场景
+- 如需处理自定义事件，可通过订阅特定事件类型在专用回调中处理
 
 说明：
 - `on_init`：资源初始化、订阅声明、参数读取

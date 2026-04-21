@@ -776,15 +776,17 @@ class LLMSentimentSignal(BasePlugin):
 
     async def _call_local_llm(self, prompt: str) -> dict:
         """调用本地 LLM"""
-        # TODO: 使用 HostAPI 获取 LLMProvider，不直接 import httpx
+        # 实现说明：此方法应通过 HostAPI 获取 LLMProvider 实例，而非直接调用 HTTP
+        # 正确实现模式：
         # llm = self.ctx.get_llm_provider(self.model_provider)
         # if llm is None or not llm.is_available():
         #     raise RuntimeError(f"LLM provider {self.model_provider} not available")
         # response = await llm.complete(prompt, self.max_tokens, self.timeout)
         # return self._parse_response(response.content)
+        #
+        # 当前为占位符实现，仅用于文档展示结构，实际开发时必须替换为上述模式
 
-        # 临时模拟返回结果（实际实现应移除）
-        await asyncio.sleep(0.5)  # 模拟推理延迟
+        await asyncio.sleep(0.5)  # 占位符：模拟推理延迟
         return {
             "sentiment": "positive",
             "score": 0.3,
@@ -794,15 +796,17 @@ class LLMSentimentSignal(BasePlugin):
 
     async def _call_cloud_llm(self, prompt: str) -> dict:
         """调用云端 LLM"""
-        # TODO: 使用 HostAPI 获取 LLMProvider，不直接 import httpx
+        # 实现说明：此方法应通过 HostAPI 获取 LLMProvider 实例，而非直接调用 HTTP
+        # 正确实现模式：
         # llm = self.ctx.get_llm_provider(self.model_provider)
         # if llm is None or not llm.is_available():
         #     raise RuntimeError(f"LLM provider {self.model_provider} not available")
         # response = await llm.complete(prompt, self.max_tokens, self.timeout)
         # return self._parse_response(response.content)
+        #
+        # 当前为占位符实现，仅用于文档展示结构，实际开发时必须替换为上述模式
 
-        # 临时模拟返回结果（实际实现应移除）
-        await asyncio.sleep(1.0)  # 模拟网络延迟
+        await asyncio.sleep(1.0)  # 占位符：模拟网络延迟
         return {
             "sentiment": "neutral",
             "score": 0.0,
@@ -812,14 +816,16 @@ class LLMSentimentSignal(BasePlugin):
 
     def _parse_response(self, raw: str) -> dict:
         """解析 LLM 响应"""
-        # TODO: 使用 orjson.loads + 异常捕获，返回标准化 dict
+        # 实现说明：应使用 orjson.loads 解析 JSON 响应，并添加异常处理
+        # 正确实现模式：
         # import orjson
         # try:
         #     return orjson.loads(raw)
         # except Exception:
         #     return {"sentiment": "neutral", "score": 0.0, "confidence": 0.0}
+        #
+        # 当前为占位符实现，仅用于文档展示结构，实际开发时必须替换为上述模式
 
-        # 临时模拟解析（实际实现应移除）
         return {
             "sentiment": "neutral",
             "score": 0.0,
