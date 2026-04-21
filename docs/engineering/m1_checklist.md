@@ -180,7 +180,38 @@ M1 验收标准参考 `engineering/engineering_baseline.md` 第14节定义：
 - [ ] 插件输出约束有占位
 - [ ] 权限模型有基础结构
 
-### 6.4 UI Bridge 骨架
+### 6.4 策略协议骨架
+
+以下接口至少建立：
+
+- [ ] `BaseStrategy` 抽象基类
+- [ ] `StrategyContext` 接口
+- [ ] `StrategyHostAPI` 接口（submit_order、cancel_order、get_positions、get_account）
+- [ ] `strategy/host_api.py` 最小壳
+
+检查项：
+- [ ] BaseStrategy 生命周期接口完整（on_init、on_start、on_stop、on_tick、on_bar、on_event）
+- [ ] StrategyHostAPI 方法名与协议一致
+- [ ] 交易权限模型有基础结构
+- [ ] 回测一致性保证有占位
+
+### 6.5 风控协议骨架
+
+以下接口至少建立：
+
+- [ ] `RiskChecker` 抽象接口
+- [ ] `RiskManager` 接口
+- [ ] `RiskCheckRequest` 数据类
+- [ ] `RiskCheckResult` 数据类
+- [ ] `rules/session_engine.py` 最小壳
+
+检查项：
+- [ ] RiskChecker 接口方法完整（check、get_check_type）
+- [ ] RiskManager 支持多检查器注册
+- [ ] RiskCheckResult 字段与协议一致（passed、check_type、block_reason、block_code、check_time、context）
+- [ ] 风控事件模型有占位（RISK_BLOCKED、RISK_WARNING）
+
+### 6.6 UI Bridge 骨架
 
 以下接口至少建立：
 

@@ -4,49 +4,21 @@
 
 本文件用于快速说明中国期货专用平台的架构文档体系，帮助开发者、协作者和 AI 辅助工具在进入编码前，先理解系统边界、模块职责、协议关系和开发顺序。
 
-如果把整个平台看成一个长期演进的产品，那么这 11 份文档并不是彼此独立的说明书，而是一套相互咬合的正式基线：
+如果把整个平台看成一个长期演进的产品，那么这 12 份文档并不是彼此独立的说明书，而是一套相互咬合的正式基线：
 
 ---
 
 ## 1.5 战略定位
 
-### 目标用户
+本平台面向个人量化用户和个人交易用户，采用"开源核心 + 商业扩展"的双层模式，部署为 Tauri + React + Python sidecar 的桌面客户端，使用 DuckDB + Parquet 双层架构存储历史 Tick 数据。
 
-本平台面向两类核心用户：
-
-1. **个人量化用户**：需要本地化、低延迟、可回测、可扩展的交易终端，支持自定义策略和指标。
-2. **个人交易用户**：需要稳定易用的桌面终端，支持实时行情、技术分析和辅助决策。
-
-### 商业边界
-
-本平台采用"开源核心 + 商业扩展"的双层模式：
-
-- **开源核心**：协议层、架构层、基础引擎、插件框架、UI 桥接协议完全开源。
-- **商业扩展**：高级策略库、专业数据服务、企业级风控、多账户管理等作为商业产品提供。
-
-### 部署形态
-
-**最终部署形式：桌面客户端**
-
-- **桌面容器**：Tauri
-- **前端**：React
-- **核心引擎**：Python sidecar 进程
-- **通信方式**：本地 HTTP + WebSocket（UiBridge 唯一边界）
-- **禁止**：React 直接调用 Gateway / Strategy / Repository
-- **禁止**：将核心交易逻辑写入 Tauri Rust 层
-
-### 存储架构
-
-**历史 Tick 存储：DuckDB + Parquet 双层架构**
-
-- **实时写入路径**：GatewayAdapter → TickCache (内存 deque) → 定时落盘 → Parquet 文件（按交易日分片）
-- **查询/回测路径**：BacktestEngine → DuckDB (直接查询 Parquet) → Strategy
-- **元数据存储**：SQLite（合约基础信息、交易日历、策略参数等小表）
+完整战略定位说明（目标用户、商业边界、部署形态、存储架构）请参考 `system/architecture.md` 第 2-4 节。
 
 ---
 
-如果把整个平台看成一个长期演进的产品，那么这 11 份文档并不是彼此独立的说明书，而是一套相互咬合的正式基线：
+如果把整个平台看成一个长期演进的产品，那么这 12 份文档并不是彼此独立的说明书，而是一套相互咬合的正式基线：
 - `system/architecture.md`
+- `core/gateway_protocol.md`
 - `core/data_protocol.md`
 - `core/event_protocol.md`
 - `system/config_protocol.md`
@@ -62,11 +34,15 @@
 
 ---
 
-## 2. 11 份文档分别解决什么问题
+## 2. 12 份文档分别解决什么问题
 
 ### `system/architecture.md`
-回答“系统怎么分层、模块怎么协作、依赖方向怎么约束”的问题。  
+回答"系统怎么分层、模块怎么协作、依赖方向怎么约束"的问题。  
 它定义七层架构、主引擎协调模式、实时 / 回放主流程，以及哪些跨层依赖是允许的、哪些是禁止的。
+
+### `core/gateway_protocol.md`
+回答"网关接口如何标准化、连接状态如何管理、重连策略如何实现"的问题。  
+它定义 BaseGateway 接口（connect、disconnect、subscribe、submit_order、cancel_order、query_account、query_position、query_orders）、GatewayCallback 接口、GatewayStatus 枚举、重连策略和回调映射约束，确保不同交易所网关（CTP、OpenCTP、SimNow、模拟网关）接口兼容。
 
 ### `core/data_protocol.md`
 回答“系统内部到底交换什么对象”的问题。  
@@ -112,11 +88,12 @@
 
 ## 3. 这些文档之间是什么关系
 
-可以把这 11 份文档理解成 3 层：
+可以把这 12 份文档理解成 3 层：
 
 ### 第一层：最稳定的核心协议层
 - `core/data_protocol.md`
 - `core/event_protocol.md`
+- `core/gateway_protocol.md`
 - `core/plugin_protocol.md`
 - `core/strategy_protocol.md`
 - `core/risk_protocol.md`
@@ -149,34 +126,37 @@
 1. `system/architecture.md`  
 先看整体骨架，知道系统分几层、主流程怎么走、哪些依赖不能碰。
 
-2. `core/data_protocol.md`  
+2. `core/gateway_protocol.md`  
+再看网关接口定义，了解 GatewayAdapter、GatewayManager 的标准接口契约。
+
+3. `core/data_protocol.md`  
 再看标准对象，因为后面所有模块几乎都要依赖这些对象。
 
-3. `core/event_protocol.md`  
+4. `core/event_protocol.md`  
 接着看事件模型，理解系统默认协作方式。
 
-4. `system/config_protocol.md`  
+5. `system/config_protocol.md`  
 然后看配置如何进入系统，哪些字段可变、哪些字段要迁移。
 
-5. `core/plugin_protocol.md`  
+6. `core/plugin_protocol.md`  
 再看扩展能力如何接入，避免把插件写成绕过核心的“外挂脚本”。
 
-6. `core/strategy_protocol.md`  
+7. `core/strategy_protocol.md`  
 如果要做策略交易，必须读这份，理解策略 Host API、权限模型和回测一致性。
 
-7. `core/risk_protocol.md`  
+8. `core/risk_protocol.md`  
 理解风控检查机制，这是交易执行前的必要安全屏障。
 
-8. `core/backtest_protocol.md`  
+9. `core/backtest_protocol.md`  
 理解回测、仿真、实盘的统一接口，保证策略可复验。
 
-9. `system/ui_bridge_protocol.md`  
+10. `system/ui_bridge_protocol.md`  
 如果要做前端、工作区、图表或交互，就必须读这份，明确前后端边界。
 
-10. `core/golden_examples.md`  
+11. `core/golden_examples.md`  
 参考黄金样例，理解如何正确实现插件和策略。
 
-11. `engineering/engineering_baseline.md`  
+12. `engineering/engineering_baseline.md`  
 最后看工程约束，确认目录结构、测试门槛、交付标准和 AI 协作要求。
 
 ---

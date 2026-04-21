@@ -114,6 +114,38 @@ UI Bridge 包含三类接口：
 }
 ```
 
+### 5.5 错误码枚举
+
+所有 Bridge 错误必须使用标准错误码，前后端统一引用：
+
+**通用错误码：**
+- `BRIDGE_VALIDATION_ERROR` - 请求参数校验失败
+- `BRIDGE_TIMEOUT` - 请求超时
+- `BRIDGE_PERMISSION_DENIED` - 权限不足
+- `BRIDGE_NOT_IMPLEMENTED` - 功能未实现
+- `BRIDGE_INTERNAL_ERROR` - 内部错误
+
+**查询错误码：**
+- `WORKSPACE_NOT_FOUND` - 工作区不存在
+- `INSTRUMENT_NOT_FOUND` - 合约不存在
+- `CHART_SNAPSHOT_NOT_FOUND` - 图表快照不存在
+- `PLUGIN_NOT_FOUND` - 插件不存在
+- `QUERY_INVALID_PARAMS` - 查询参数无效
+
+**命令错误码：**
+- `COMMAND_INVALID_PARAMS` - 命令参数无效
+- `COMMAND_EXECUTION_FAILED` - 命令执行失败
+- `COMMAND_NOT_ALLOWED` - 命令不允许执行（如回放中禁止修改布局）
+- `WORKSPACE_SAVE_FAILED` - 工作区保存失败
+- `PLUGIN_LOAD_FAILED` - 插件加载失败
+- `PLUGIN_UNLOAD_FAILED` - 插件卸载失败
+
+**订阅错误码：**
+- `SUBSCRIPTION_INVALID_PARAMS` - 订阅参数无效
+- `SUBSCRIPTION_LIMIT_EXCEEDED` - 订阅数量超限
+- `SUBSCRIPTION_FAILED` - 订阅失败
+- `UNSUBSCRIPTION_FAILED` - 取消订阅失败
+
 ## 6. Command API
 
 ### 6.1 用途

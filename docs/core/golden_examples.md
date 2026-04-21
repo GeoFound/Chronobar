@@ -2,6 +2,27 @@
 
 **基于协议版本：v1.2**
 
+## 样例环境声明
+
+**Python 版本：** 3.11+
+
+**关键依赖版本：**
+- pydantic>=2.5,<3
+- pyarrow>=14.0,<15
+- typing-extensions>=4.9,<5
+
+**数据模型约定：**
+- 使用 `dataclass(slots=True)` 定义协议对象
+- 不使用 Pydantic BaseModel（协议层保持纯 Python）
+- 序列化使用 `orjson` 或 `pyarrow`
+- 类型注解使用 `typing` 模块（`list[str]`, `dict[str, Any]` 等）
+
+**代码风格约定：**
+- 使用 `ruff` 进行代码格式化
+- 使用 `mypy` 进行类型检查
+- 函数和类使用 snake_case
+- 常量使用 UPPER_CASE
+
 ## 1. 文档定位
 
 本文档提供 4 个黄金样例：MA 指标插件、双均线信号插件、仿真策略插件、回放测试用例。

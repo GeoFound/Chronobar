@@ -327,14 +327,14 @@ requires-python = ">=3.11,<3.13"
 ### 12.2 Runtime 必选依赖
 
 ```
-pydantic
-fastapi
-uvicorn
-duckdb
-pyarrow
-orjson
-typing-extensions
-tenacity
+pydantic>=2.5,<3
+fastapi>=0.110,<1
+uvicorn>=0.27,<1
+duckdb>=0.10,<1
+pyarrow>=14.0,<15
+orjson>=3.9,<4
+typing-extensions>=4.9,<5
+tenacity>=8.2,<9
 ```
 
 ### 12.3 Dev 必选依赖
