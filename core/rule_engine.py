@@ -1,18 +1,18 @@
 """Rule engine implementation for Chronobar platform."""
 
 import logging
-from datetime import datetime, time, date
+from datetime import date, datetime, time
 from typing import Any
 
 from core.enums import SessionType
 from core.exceptions import ChronobarError
-
 
 logger = logging.getLogger(__name__)
 
 
 class RuleEngineError(ChronobarError):
     """Exception raised for rule engine errors."""
+
     pass
 
 
@@ -92,9 +92,7 @@ class RuleEngine:
         self._session_templates[template_id] = template
         logger.info(f"Loaded session template: {template_id}")
 
-    def determine_session(
-        self, dt: datetime, template_id: str
-    ) -> tuple[SessionType, time, time]:
+    def determine_session(self, dt: datetime, template_id: str) -> tuple[SessionType, time, time]:
         """Determine session type and segment for a given datetime.
 
         Args:
@@ -126,9 +124,7 @@ class RuleEngine:
 
         raise RuleEngineError(f"Time {current_time} does not fall within any session segment")
 
-    def calculate_trading_date(
-        self, dt: datetime, template_id: str, calendar_date: date
-    ) -> date:
+    def calculate_trading_date(self, dt: datetime, template_id: str, calendar_date: date) -> date:
         """Calculate trading date based on datetime and template rule.
 
         Args:
@@ -165,9 +161,7 @@ class RuleEngine:
             # Morning and afternoon sessions belong to the same trading date
             return calendar_date
         else:
-            raise RuleEngineError(
-                f"Trading date rule {template.trading_date_rule} not supported"
-            )
+            raise RuleEngineError(f"Trading date rule {template.trading_date_rule} not supported")
 
     def is_cross_day_session(self, template_id: str, session_type: SessionType) -> bool:
         """Check if a session type crosses day boundary.
@@ -183,9 +177,7 @@ class RuleEngine:
         if not template:
             raise RuleEngineError(f"Session template {template_id} not loaded")
 
-        segment = next(
-            (s for s in template.segments if s.session_type == session_type), None
-        )
+        segment = next((s for s in template.segments if s.session_type == session_type), None)
         if not segment:
             return False
 

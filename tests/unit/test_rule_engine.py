@@ -1,11 +1,11 @@
 """Unit tests for rule engine."""
 
-from datetime import datetime, time, date
+from datetime import date, datetime, time
 
 import pytest
 
 from core.enums import SessionType
-from core.rule_engine import RuleEngine, RuleEngineError, SessionTemplate, SessionSegment
+from core.rule_engine import RuleEngine, RuleEngineError, SessionSegment, SessionTemplate
 
 
 def test_session_segment_creation():
