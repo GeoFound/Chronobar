@@ -228,7 +228,21 @@ Order:
   session_type: enum[morning, afternoon, night]
   gateway_order_id: str | null
   error_message: str | null
+  cancellation_reason: str | null
+  cancel_reason_code: enum[timeout, rejected_by_user, rejected_by_risk, rejected_by_exchange, connection_lost, other] | null
   extra: dict | null
+```
+
+### 8.1.1 CancelReasonCode 枚举
+
+```text
+CancelReasonCode:
+  timeout: 撤单超时
+  rejected_by_user: 用户主动撤单
+  rejected_by_risk: 风控拦截撤单
+  rejected_by_exchange: 交易所拒绝撤单
+  connection_lost: 连接丢失
+  other: 其他原因
 ```
 
 ### 8.2 Trade

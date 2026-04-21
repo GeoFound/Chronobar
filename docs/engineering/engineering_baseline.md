@@ -139,6 +139,17 @@ futures_platform/
 - Python：pytest
 - Frontend：Vitest / Playwright
 
+测试覆盖率目标：
+- 核心模块（event_engine、main_engine、storage、risk、backtest）：≥80%
+- 协议层（data_protocol、event_protocol、plugin_protocol）：≥95%
+
+关键路径必须覆盖：
+- 订单生命周期
+- 风控拦截
+- 事件投递
+- 历史 Tick 读取
+- 回放模式切换
+
 必须覆盖：
 - 单元测试
 - 协议测试
@@ -257,6 +268,21 @@ futures_platform/
 
 ## 10. AI 协作约束
 
+### 10.1 生成前声明模板
+
+AI 在生成代码前必须声明：
+
+```
+本次生成声明：
+- 所属层：Infrastructure / Core / Gateway / UI Bridge / Plugin / Risk / Backtest
+- 实现目标：实现哪个类/模块
+- 对应协议：引用哪个 protocol 文档中的哪个接口/对象
+- 依赖对象：依赖哪些已存在类、枚举、事件、模型
+- 禁止事项：不得新增重复模型，不得跨层直接调用未授权对象
+```
+
+### 10.2 生成约束
+
 - AI 生成代码不得绕过协议文档
 - AI 生成新功能必须先声明所属层级
 - AI 生成插件必须使用标准生命周期接口
@@ -264,7 +290,79 @@ futures_platform/
 - AI 生成桥接接口必须同步更新契约说明
 - AI 生成代码在合并前必须通过测试与类型检查
 
-## 11. 禁止事项
+## 11. 存储层技术决策
+
+### 11.1 历史 Tick 存储
+
+- **技术选型**：DuckDB + Parquet 双层架构
+- **实时写入路径**：GatewayAdapter → TickCache (内存 deque) → 定时落盘 → Parquet 文件（按交易日分片）
+- **查询/回测路径**：BacktestEngine → DuckDB (直接查询 Parquet) → Strategy
+- **Parquet 文件**：按 instrument_id/trading_date.parquet 分片存储，支持时间分区裁剪
+- **DuckDB**：作为查询引擎直接读取 Parquet，不额外存储数据，仅作为 SQL 计算层使用
+
+### 11.2 元数据存储
+
+- 合约基础信息、交易日历、策略参数等小表继续使用 SQLite
+- DuckDB + Parquet 专门处理 Tick 时序数据
+
+### 11.3 禁止事项
+
+- 禁止使用 TimescaleDB（需服务进程，违反单进程原则）
+- 禁止使用 InfluxDB（需服务进程，版权复杂）
+- 禁止将 SQLite 用于 Tick 历史数据存储（量级天花板低）
+
+## 12. pyproject.toml 基线
+
+### 12.1 Python 版本
+
+```
+requires-python = ">=3.11,<3.13"
+```
+
+### 12.2 Runtime 必选依赖
+
+```
+pydantic
+fastapi
+uvicorn
+duckdb
+pyarrow
+orjson
+typing-extensions
+tenacity
+```
+
+### 12.3 Dev 必选依赖
+
+```
+pytest
+pytest-asyncio
+pytest-cov
+ruff
+mypy
+pre-commit
+```
+
+### 12.4 可选扩展
+
+按阶段启用：
+
+```
+pandas
+polars
+msgspec
+openctp-ctp
+apscheduler
+```
+
+### 12.5 依赖管理原则
+
+- Runtime 依赖必须显式列出
+- Dev 依赖单独分组
+- 所有关键库必须锁定大版本
+- FastAPI、Pydantic、DuckDB 必须确认可用版本范围
+
+## 13. 禁止事项
 
 - 禁止先堆 UI 再补内核
 - 禁止核心对象长期使用松散 dict 传递
@@ -274,7 +372,7 @@ futures_platform/
 - 禁止为了临时需求破坏协议兼容性
 - 禁止前端组件依赖未声明桥接字段
 
-## 12. 里程碑验收
+## 14. 里程碑验收
 
 ### M1：协议完成
 - 四类协议定稿

@@ -65,6 +65,8 @@ plugin_name/
   "kind": "indicator",
   "entry": "plugin.py",
   "dependencies": [],
+  "depends_on": [],
+  "load_after": [],
   "permissions": {
     "read_market_data": true,
     "emit_alert": false,
@@ -88,6 +90,8 @@ plugin_name/
   "kind": "signal",
   "entry": "plugin.py",
   "dependencies": [],
+  "depends_on": ["ma_segmented"],
+  "load_after": [],
   "permissions": {
     "read_market_data": true,
     "emit_alert": true,
@@ -111,6 +115,8 @@ plugin_name/
   "kind": "strategy",
   "entry": "strategy.py",
   "dependencies": [],
+  "depends_on": ["dual_ma_signal"],
+  "load_after": [],
   "permissions": {
     "read_market_data": true,
     "emit_alert": true,

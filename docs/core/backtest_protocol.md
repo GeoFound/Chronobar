@@ -47,6 +47,17 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime, date
+from enum import Enum
+
+class BacktestMode(Enum):
+    REPLAY = "replay"
+    SIM = "sim"
+    LIVE = "live"
+
+class HistoricalDataFormat(Enum):
+    PARQUET = "parquet"
+    CSV = "csv"
+    DATABASE = "database"
 
 @dataclass(slots=True)
 class BacktestConfig:
@@ -55,8 +66,9 @@ class BacktestConfig:
     initial_capital: float
     commission_rate: float
     slippage: float
-    mode: str  # "replay", "sim", "live"
+    mode: BacktestMode  # BacktestMode.REPLAY, BacktestMode.SIM, BacktestMode.LIVE
     data_source: str
+    data_format: HistoricalDataFormat = HistoricalDataFormat.PARQUET  # 默认使用 Parquet
     strategy_id: str
     parameters: dict
 
