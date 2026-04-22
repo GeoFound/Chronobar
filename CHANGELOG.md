@@ -22,8 +22,11 @@ This document tracks version changes across all protocol documents, following [K
   - Created `docs/faq.md` with common questions
   - Created `docs/system/ai_assistant_architecture.md` and `docs/system/ai_assistant_product_contract.md` as AI Assistant supplemental design docs
   - Created `docs/engineering/delivery_master_plan.md`, `docs/engineering/implementation_task_packages.md`, and `.windsurf/workflows/execute-chronobar-delivery.md` for phased delivery execution
-- Renamed document layers from 第一层/第二层/第三层 to Contracts/Architecture/Engineering Standards
-- GitHub Issue templates for bug reports and feature requests
+  - Created `docs/engineering/current_phase_and_truth_source.md` to define the official current phase, truth-source priority, and early runtime scope freeze
+  - Created `docs/engineering/runtime_nonfunctional_baseline.md` to define performance targets, benchmark expectations, and minimum observability requirements
+  - Created `docs/system/storage_lifecycle_and_recovery.md` to define data retention, backup/restore, corruption handling, and recovery paths
+  - Renamed document layers from 第一层/第二层/第三层 to Contracts/Architecture/Engineering Standards
+  - GitHub Issue templates for bug reports and feature requests
 
 ### Changed
 - Merged strategic execution decisions directly into planning documents instead of creating a new long-lived decision layer:
@@ -35,10 +38,17 @@ This document tracks version changes across all protocol documents, following [K
 - Aligned `docs/system/config_protocol.md` bridge port examples with `docs/system/ui_bridge_protocol.md`
 - Fixed roadmap version references for `config_protocol.md` and `ui_bridge_protocol.md`
 - Fixed the LICENSE relative link in `docs/CONTRIBUTING.md`
-- Updated `docs/engineering/engineering_baseline.md` dependency baseline to include YAML and JSON Schema tooling
-- Strengthened markdown lint coverage to validate heading slug uniqueness and fragment anchor resolution
-- README layer naming to use Contracts/Architecture/Engineering Standards instead of Chinese layer names
-- Comparison table data接入 entry to be more specific and honest (国内主流期货 API（计划）)
+  - Updated `docs/engineering/engineering_baseline.md` dependency baseline to include YAML and JSON Schema tooling
+  - Unified current-phase wording across `README.md`, `ai-instructions.md`, `docs/roadmap.md`, `docs/CONTRIBUTING.md`, `docs/getting_started_for_contributors.md`, `examples/README.md`, and `tests/test_repo_baseline.py` to keep the repository in M1 baseline convergence until P1 / M2 gates are formally passed
+  - Reframed `docs/engineering/p1_completion_summary.md` as a pre-P1 review record instead of an authoritative completion claim
+  - Aligned `docs/engineering/engineering_baseline.md` Python version wording with `pyproject.toml` (`>=3.14`) and linked it to the new nonfunctional and storage recovery baselines
+  - Upgraded the `pyarrow` dependency baseline from `>=14.0,<15` to `>=23.0,<24` to match the Python 3.14 workspace baseline and avoid failing local validation on unsupported wheels/builds
+  - Expanded `docs/engineering/implementation_task_packages.md` into a full productization task system from P0 to P6, including D1-D10 cross-stage dimensions, phase closure packages, richer desktop / AI / release tasks, and a final product completion definition
+  - Strengthened `docs/engineering/delivery_master_plan.md` to require stage proof artifacts, evidence gates, blocker gates, and explicit beta / GA release readiness conditions
+  - Updated `.windsurf/workflows/execute-chronobar-delivery.md` so phased execution must track closure packages, blocker state, evidence outputs, and multi-dimension task coverage
+  - Strengthened markdown lint coverage to validate heading slug uniqueness and fragment anchor resolution
+  - README layer naming to use Contracts/Architecture/Engineering Standards instead of Chinese layer names
+  - Comparison table data接入 entry to be more specific and honest (国内主流期货 API（计划）)
 - Core principles table to fix duplicate text
 
 ## [1.2.0] - 2026-04-21

@@ -4,6 +4,7 @@
 
 > 说明：Chronobar 的执行重心明确收敛为“本地数据飞轮 + 中国期货语义正确性 + 受控桌面工作站”。
 > 因此，路线图优先保证离线可复验闭环、用户可持续积累的数据资产，以及桌面运行时稳定性，不以早期接口广度或 AI 功能铺开为首要目标。
+> 当前正式阶段口径以 [`docs/engineering/current_phase_and_truth_source.md`](engineering/current_phase_and_truth_source.md) 为辅助锚点；仓库中的实验性运行时代码与演示脚本不代表 P1 / M2 已正式放行。
 
 ## 阶段概览
 
@@ -39,6 +40,9 @@
 - ✅ [`docs/decisions/`](decisions/) - 架构决策记录
 - ✅ [`docs/system/ai_assistant_architecture.md`](system/ai_assistant_architecture.md) - AI Assistant 架构蓝图（补充设计）
 - ✅ [`docs/system/ai_assistant_product_contract.md`](system/ai_assistant_product_contract.md) - AI Assistant 产品契约（补充设计）
+- ✅ [`docs/engineering/current_phase_and_truth_source.md`](engineering/current_phase_and_truth_source.md) - 当前阶段、真相源优先级与范围冻结说明
+- ✅ [`docs/engineering/runtime_nonfunctional_baseline.md`](engineering/runtime_nonfunctional_baseline.md) - 非功能基线（性能目标、可观测性、benchmark 约束）
+- ✅ [`docs/system/storage_lifecycle_and_recovery.md`](system/storage_lifecycle_and_recovery.md) - 数据生命周期、备份/恢复与损坏处理设计
 - ✅ [`docs/engineering/delivery_master_plan.md`](engineering/delivery_master_plan.md) - 从 M1 到发布的交付总计划
 - ✅ [`docs/engineering/implementation_task_packages.md`](engineering/implementation_task_packages.md) - 面向任务 AI 的实施任务包
 - ✅ [`.windsurf/workflows/execute-chronobar-delivery.md`](../.windsurf/workflows/execute-chronobar-delivery.md) - 分阶段执行工作流
@@ -56,6 +60,7 @@
 - 黄金样例可通过人工审查
 - README 文档地图与正式基线文档数量一致（13 份）
 - AI Assistant 的产品契约与系统蓝图已独立成文，但不提前承诺 M2 之前存在完整运行时实现
+- 当前正式阶段、范围冻结、非功能目标与存储恢复路径均已有书面锚点
 - 从 M1 到产品落地的阶段 gate、回滚条件和任务包已独立成文，可作为任务 AI 的执行依据
 
 ## M2: 核心框架搭建

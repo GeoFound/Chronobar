@@ -99,8 +99,9 @@ futures_platform/
 
 ### 4.1 Python 版本
 
-- Python 3.11+ 为最低支持版本。
-- 新特性使用需以 3.11 为兼容下限。
+- Python 3.14+ 为当前仓库最低支持版本。
+- 新特性使用需以 3.14 为兼容下限。
+- 若未来需要调整兼容版本，必须同步更新 `pyproject.toml`、CI、`ai-instructions.md` 与本文件。
 
 ### 4.2 Python 类型要求
 
@@ -181,6 +182,7 @@ futures_platform/
 - 插件异常必须生成独立日志事件
 - 回放模式必须可导出事件日志
 - 前端命令失败与订阅异常必须可追踪
+- 运行时性能预算、最小指标面与健康状态定义应以 `runtime_nonfunctional_baseline.md` 为准
 
 ## 6. 配置治理
 
@@ -466,6 +468,7 @@ AI 在生成代码前必须声明：
 - 禁止使用 TimescaleDB（需服务进程，违反单进程原则）
 - 禁止使用 InfluxDB（需服务进程，版权复杂）
 - 禁止将 SQLite 用于 Tick 历史数据存储（量级天花板低）
+- 数据生命周期、备份/恢复与损坏处理路径应以 `../system/storage_lifecycle_and_recovery.md` 为准
 
 ## 13. pyproject.toml 基线
 
@@ -482,7 +485,7 @@ pydantic>=2.5,<3
 fastapi>=0.110,<1
 uvicorn>=0.27,<1
 duckdb>=0.10,<2
-pyarrow>=14.0,<15
+pyarrow>=23.0,<24
 orjson>=3.9,<4
 typing-extensions>=4.9,<5
 tenacity>=8.2,<9

@@ -10,9 +10,9 @@ Chronobar 当前处于 **M1 基线收敛** 阶段。
 - 协议文档已经基本定稿
 - 默认配置与 JSON Schema 已入仓
 - 基础测试入口和 CI 基线已入仓
-- 核心运行时代码尚未开始，计划在 M2 推进
+- 仓库中允许存在实验性运行时代码与演示脚本，但它们不代表 P1 / M2 已正式放行
 
-如果你想了解完整阶段说明，请优先阅读 [`docs/roadmap.md`](roadmap.md)。
+如果你想了解完整阶段说明，请优先阅读 [`docs/roadmap.md`](roadmap.md) 和 [`docs/engineering/current_phase_and_truth_source.md`](engineering/current_phase_and_truth_source.md)。
 
 ## 第一次阅读建议
 
@@ -25,8 +25,10 @@ Chronobar 当前处于 **M1 基线收敛** 阶段。
 5. [`docs/core/event_protocol.md`](core/event_protocol.md)
 6. [`docs/system/config_protocol.md`](system/config_protocol.md)
 7. [`docs/system/ui_bridge_protocol.md`](system/ui_bridge_protocol.md)
-8. [`docs/engineering/engineering_baseline.md`](engineering/engineering_baseline.md)
-9. [`docs/engineering/m1_checklist.md`](engineering/m1_checklist.md)
+8. [`docs/system/storage_lifecycle_and_recovery.md`](system/storage_lifecycle_and_recovery.md)
+9. [`docs/engineering/runtime_nonfunctional_baseline.md`](engineering/runtime_nonfunctional_baseline.md)
+10. [`docs/engineering/engineering_baseline.md`](engineering/engineering_baseline.md)
+11. [`docs/engineering/m1_checklist.md`](engineering/m1_checklist.md)
 
 ## 当前最适合贡献的任务
 
