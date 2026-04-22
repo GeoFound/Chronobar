@@ -573,6 +573,9 @@ apscheduler
 |------|--------|
 | **Pydantic** | 与 data_protocol.md 中的强类型对象定义直接对应；迁移验证（model_validator）可用于 config migration |
 | **msgspec** | 高性能序列化与验证库；Struct 类型比 dataclasses 快 5-60 倍，适合 Tick/Bar/Event 高性能处理；零开销 schema 验证 |
+| **structlog** | 结构化日志库；trace_id 自动传播、JSON 输出、与标准 logging 集成；满足 engineering_baseline.md §10 日志可追踪要求；适合 P3+ 审计追踪 |
+| **ibis** | 便携式 dataframe 库；默认 DuckDB 后端与 Chronobar 存储架构一致；适合 P3 回测系统数据分析、P5 AI 能力数据探索；支持多后端切换 |
+| **polars** | Rust 编写的高性能 DataFrame 引擎；Apache Arrow 列式格式与 DuckDB/Parquet 兼容；适合 P3 回测系统大规模历史数据分析、P5 AI 特征工程 |
 | **FastAPI** | UiBridge 的 HTTP + WebSocket 边界实现的最佳实践 |
 
 **注意：** 以上项目作为参考，不意味着直接复制代码或架构。Chronobar 的设计决策应基于自身需求（桌面客户端、Tauri + React + Python sidecar、DuckDB + Parquet 存储）独立评估后确定。
