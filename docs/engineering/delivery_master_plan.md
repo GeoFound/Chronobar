@@ -6,6 +6,14 @@
 
 它是 [`engineering_baseline.md`](engineering_baseline.md)、[`m1_checklist.md`](m1_checklist.md)、[`../roadmap.md`](../roadmap.md) 的执行层补充文档，目的是把“路线图”变成“可操作的阶段推进机制”。
 
+当前执行假设如下：
+
+- Chronobar 不是单纯追求“产品壳”或“协议完备度”，而是要把中国个人量化交易从脚本工程推进到桌面工作站形态
+- Chronobar 不是做“大而全”的平台，而是做“全而小”的个人工具：覆盖个人交易者完整工作流，但严格限制范围，不追求机构平台式膨胀
+- 早期阶段的核心目标不是接口广度，而是先形成本地数据飞轮、可复验闭环和中国期货语义正确性
+- 一些能力虽然工程成本高，但属于必须前置的基础设施，例如 Tick 持续落盘、回放一致性、sidecar 生命周期治理、桌面故障恢复入口
+- Chronobar 默认服务“用户拥有自己的工具”这一前提：数据、策略、日志、回放资产优先保留在用户本地，尽量减少对云端、第三方平台和外部托管链路的依赖
+
 ## 2. 当前审查结论
 
 截至当前仓库状态，Chronobar 的主要缺口不再是协议文档，而是交付执行层：
@@ -25,10 +33,17 @@
 ## 3. 总体原则
 
 - **协议先行**：所有实现必须以正式协议为边界，不反向发明字段。
+- **全而小**：优先覆盖个人交易者的完整核心工作流，而不是向平台化、大而全工具链无限扩张。
+- **用户主权优先**：数据、策略、回放、日志与配置优先归用户本地持有，尽量减少对外部平台、云服务与托管链路的依赖。
 - **竖切优先**：优先做可验证的最小闭环，而不是横向铺满模块空壳。
+- **数据飞轮优先**：优先把 Tick 持续采集、落盘、查询、回放做成一条会积累资产的主链路。
+- **中国期货语义优先**：trading_date、calendar_date、session_type、session 边界必须视为产品级正确性要求。
 - **可回滚**：每阶段都必须有明确回退目标和冻结点。
 - **先内核后体验**：先完成核心运行链路，再叠加 UI 复杂体验。
+- **必要能力可前置**：若某项能力会决定后续所有阶段是否可持续推进，应尽早纳入主计划，而不是以“后面再说”推迟。
 - **AI 受控接入**：AI Assistant 在产品中按受控、证据优先、可拒答原则逐步落地。
+- **安全是交叉约束**：策略资产保护、交易流程完整性、行为隐私、AI 遏制与插件隔离不是某一个阶段的专属任务，而是从 M2 起每个阶段都必须持续验证的跨阶段约束。
+- **桌面稳定性前置治理**：sidecar 生命周期、健康检查、动态端口、重启恢复、日志导出不视为发布前装饰项，而是桌面路线的核心组成。
 - **阶段冻结**：每阶段退出前必须先完成验证、文档和回滚预案，不得带着高风险歧义进入下一阶段。
 
 ## 4. 阶段总览
@@ -36,10 +51,10 @@
 | 阶段 | 对应路线图 | 核心目标 | 是否允许进入下一阶段 |
 |------|-----------|---------|--------------------|
 | P0 | M1 | 冻结协议、配置、测试与工程基线 | 仅当 M1 gate 全部满足 |
-| P1 | M2 | 跑通核心最小闭环（Tick -> Event -> Bar -> Indicator -> Chart Snapshot） | 仅当核心链路可运行 |
-| P2 | M3 | 建立可加载、可隔离、可验证的插件系统 | 仅当插件治理与隔离达标 |
-| P3 | M4 | 跑通回测系统并验证与实时链路一致 | 仅当回测结果可复验 |
-| P4 | M5 | 做成可演示、可安装、可操作的桌面产品骨架 | 仅当桌面体验稳定 |
+| P1 | M2 | 跑通本地数据飞轮起点（SimGateway -> Tick 落盘 -> DuckDB -> RuleEngine -> Bar -> Indicator -> Snapshot） | 仅当核心链路可运行且可复验 |
+| P2 | M3 | 建立可加载、可隔离、可验证的插件系统，并提供内建样板闭环 | 仅当插件治理与隔离达标 |
+| P3 | M4 | 跑通回测系统并验证与实时/回放链路一致 | 仅当回测结果可复验 |
+| P4 | M5 | 做成可演示、可安装、可恢复的桌面工作站骨架 | 仅当桌面体验稳定 |
 | P5 | M6+ | 受控引入 AI Assistant 产品能力 | 仅当治理与评测基础达标 |
 | P6 | Release | 形成 beta / GA 发布与运维闭环 | 仅当发布门禁通过 |
 
@@ -85,10 +100,10 @@
 
 ### 6.1 目标
 
-完成第一个可运行的竖切闭环：
+完成第一个可运行、可离线复验、可持续积累本地数据资产的竖切闭环：
 
 ```text
-GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Indicator -> UiBridge Snapshot/Event
+SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB query -> EventEngine -> RuleEngine -> BarAggregator -> Indicator -> UiBridge Snapshot/Event
 ```
 
 ### 6.2 必做工作包
@@ -99,17 +114,21 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 实现 RuleEngine 最小夜盘/交易日判定
 - 实现 BarAggregator
 - 实现至少 1 个 Indicator
+- 实现 TickCache + Parquet 落盘与 DuckDB 查询入口
+- 实现 `SimGateway` 或等价本地回放入口，避免 M2 被真实账户和外部网络阻塞
 - 实现 UiBridge 的最小 Query / Subscription 投影
 - 建立最小 React / Tauri 前端壳或可替代前端契约消费者
 
 ### 6.3 退出条件
 
 - 输入一条标准 Tick，可稳定得到：
+  - 本地可查询的 Tick 落盘结果
   - Event 发布
   - session / trading_date 判定
   - 1 分钟 Bar 聚合结果
   - Indicator 输出
   - UiBridge 可消费的 snapshot / event
+- 夜盘跨日场景下，Bar 与 trading_date / session 归属一致
 - 关键单元测试和最小集成测试通过
 - 运行链路可由开发者在本地复现
 
@@ -118,6 +137,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 不允许先做复杂 UI 再补核心链路
 - 不允许把前端临时字段写入核心协议
 - 不允许用大面积 mock 掩盖事件链路未打通
+- 不允许把真实 CTP / SimNow 账户接入作为 M2 成败的前提
 
 ### 6.5 回滚条件
 
@@ -125,6 +145,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 事件模型与协议不一致
 - 夜盘 session 判定错误无法解释
 - UiBridge 输出与协议样例持续偏离
+- 本地 Tick 落盘 / 查询 / 回放链路无法形成统一口径
 
 ### 6.6 回滚动作
 
@@ -136,7 +157,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 
 ### 7.1 目标
 
-让指标插件和信号插件以受控方式接入系统，满足加载、隔离、卸载和权限治理要求。
+让指标插件和信号插件以受控方式接入系统，满足加载、隔离、卸载和权限治理要求，并优先形成一条内建样板链路，而不是先追求插件市场广度。
 
 ### 7.2 必做工作包
 
@@ -146,7 +167,9 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 插件权限校验
 - 插件加载顺序与依赖解析
 - 插件异常隔离
+- 线程级隔离与权限门禁（作为 M3 默认实现）
 - 至少 2 个 builtin 样例插件
+- 至少 1 个可以一键运行的内建信号/指标闭环样板
 
 ### 7.3 退出条件
 
@@ -154,6 +177,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 插件异常不影响主引擎稳定
 - 未授权调用被拒绝
 - 缺失插件时工作区可降级恢复
+- 内建样板可在无外部网络条件下跑通
 
 ### 7.4 回滚条件
 
@@ -171,11 +195,11 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 
 ### 8.1 目标
 
-实现历史数据驱动的回测闭环，并保证与实时链路共享协议和关键行为。
+实现历史数据驱动的回测闭环，并保证与实时链路共享协议、关键行为和数据口径。
 
 ### 8.2 必做工作包
 
-- HistoricalDataLoader
+- HistoricalDataLoader（优先消费本地落盘数据）
 - Replay Engine
 - BacktestEngine
 - OrderMatcher
@@ -188,6 +212,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 可运行一个最小策略回测
 - 回测结果可复验
 - 与实时模式共享协议对象和关键计算逻辑
+- 与本地数据落盘 / 回放链路共享统一数据口径
 - 回测报告至少包含收益、回撤、胜率、交易明细
 
 ### 8.4 回滚条件
@@ -206,7 +231,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 
 ### 9.1 目标
 
-把核心能力包装成可安装、可演示、可操作的桌面产品骨架。
+把核心能力包装成可安装、可演示、可操作、可恢复的桌面工作站骨架。
 
 ### 9.2 必做工作包
 
@@ -216,6 +241,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 图表与面板骨架
 - UiBridge Query / Command / Subscription 接入
 - 基础错误提示与日志查看入口
+- sidecar 生命周期治理（动态端口协商、健康检测、优雅关闭、异常恢复）
 - 打包与安装说明
 
 ### 9.3 退出条件
@@ -224,6 +250,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - 可查看行情 / 图表基础结果
 - 可进行回放操作
 - 可消费标准命令与标准事件
+- 可感知核心进程状态并提供恢复路径
 - 打包产物可在至少一个目标平台运行
 
 ### 9.4 回滚条件
@@ -231,6 +258,7 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - UI 依赖未声明桥接字段
 - 前端状态与核心状态严重耦合
 - 桌面壳无法稳定拉起核心进程
+- sidecar 频繁僵死、端口冲突或静默失败且用户无恢复入口
 
 ### 9.5 回滚动作
 
@@ -253,6 +281,8 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - Answer Composer
 - Audit Logger
 - 至少 3 个能力面：产品问答 / 回测解读 / 风控解释
+
+说明：AI 不作为 Chronobar 早期主轴，不以自主交易、公开投顾或无确认自动执行为方向。
 
 ### 10.3 退出条件
 
@@ -321,25 +351,77 @@ GatewayAdapter(Mock or Sim) -> EventEngine -> RuleEngine -> BarAggregator -> Ind
 - **测试 gate**：本阶段新增测试是否覆盖关键路径
 - **文档 gate**：README / roadmap / 契约 / 示例是否同步
 - **治理 gate**：是否引入越权、无审计、无确认点风险
+- **安全 gate**：策略资产是否可被未授权访问；交易路径是否可被绕过或注入；AI 是否存在未受控外部调用；插件是否可越权读取用户数据
 - **回滚 gate**：是否存在可用回退点与降级方案
 
 任一 gate 不满足，禁止进入下一阶段。
 
-## 13. 实施顺序建议
+## 13. 跨阶段安全约束
+
+以下安全要求不属于某个单独阶段，而是从 M2 起每个阶段都必须持续满足的交叉约束：
+
+### 13.1 策略资产保护
+
+- 用户策略代码、参数、回测结果属于用户私有资产
+- 插件不得静默读取非授权策略内容
+- AI 组件不得将策略逻辑或参数用于外部传输或训练
+- 策略文件在本地存储时应支持加密选项
+
+### 13.2 交易流程完整性
+
+- 所有下单、撤单、修改操作必须经过风控检查，不得存在绕过路径
+- 不允许任何组件静默注入订单或篡改撮合参数
+- 交易操作必须有完整审计日志，包括发起方、时间、参数与结果
+- 风控规则变更本身也应被记录
+
+### 13.3 行为隐私
+
+- 用户交易偏好、持仓习惯、操作频率、策略选择属于行为隐私
+- 不得默认开启任何形式的行为遥测或外送
+- 若未来引入可选的远程功能，必须以明确 opt-in 方式获取授权，且用户可随时关闭
+
+### 13.4 AI 遏制
+
+- AI 不得自主发起交易指令
+- AI 不得绕过风控或人工确认点
+- AI 不得静默调用外部 API（包括 LLM 提供商），任何外部请求必须对用户可见
+- AI 不得读取未经用户授权的策略、持仓或交易历史
+- AI 生成的任何建议必须标注为建议而非指令，且不得以自动执行为默认行为
+- AI 组件的输入和输出应可审计
+
+### 13.5 插件安全边界
+
+- 插件的数据访问范围由权限矩阵控制，不得默认授予全局读取
+- 插件不得直接访问其他插件的私有状态
+- 插件的网络访问默认关闭，需显式声明并经用户授权
+- 异常或恶意插件不得导致核心引擎状态损坏或用户数据泄露
+
+### 13.6 各阶段安全验证要求
+
+| 阶段 | 安全验证重点 |
+|------|------------|
+| P1 / M2 | Tick 落盘数据归用户本地；事件总线不可被外部注入；风控检查路径存在 |
+| P2 / M3 | 插件权限矩阵生效；插件不可越权读策略或注入订单；异常插件不可污染主引擎 |
+| P3 / M4 | 回测结果不被外送；撮合路径不可被篡改；回测审计日志完整 |
+| P4 / M5 | sidecar 通信不可被本地其他进程劫持；前端不暴露未授权数据；用户可查看安全状态 |
+| P5 / M6 | AI 输入/输出可审计；外部 API 调用可见且可关闭；AI 不可绕过确认点或风控 |
+
+## 14. 实施顺序建议
 
 推荐的实际推进顺序如下：
 
 1. P0 冻结 M1
-2. P1 跑通核心闭环
-3. P2 建插件系统
-4. P3 建回测闭环
-5. P4 做桌面产品壳
+2. P1 跑通本地数据飞轮起点与核心闭环
+3. P2 建插件系统与内建样板
+4. P3 建回测闭环与回放一致性
+5. P4 做桌面工作站壳与 sidecar 稳定性治理
 6. P5 接 AI Assistant
 7. P6 做 beta / GA
 
 AI Assistant 不应早于核心闭环和回测闭环成为主轴开发项。
+安全约束从 P1 起伴随每个阶段，不是 P6 发布前的一次性补课。
 
-## 14. 相关文档
+## 15. 相关文档
 
 - [`engineering_baseline.md`](engineering_baseline.md)
 - [`m1_checklist.md`](m1_checklist.md)

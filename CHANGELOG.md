@@ -26,6 +26,11 @@ This document tracks version changes across all protocol documents, following [K
 - GitHub Issue templates for bug reports and feature requests
 
 ### Changed
+- Merged strategic execution decisions directly into planning documents instead of creating a new long-lived decision layer:
+  - `docs/roadmap.md` now prioritizes `SimGateway`, local Tick persistence, session/trading_date correctness, and sidecar lifecycle handling
+  - `docs/engineering/delivery_master_plan.md` now treats data flywheel, replay consistency, and desktop recovery paths as first-class delivery constraints
+  - `docs/engineering/implementation_task_packages.md` now turns those priorities into executable task packages for M2-M5
+  - `.windsurf/workflows/execute-chronobar-delivery.md` continues to use delivery plan + task packages as the execution source of truth
 - Unified M1 wording across `README.md`, `docs/CONTRIBUTING.md`, `docs/roadmap.md`, and `docs/engineering/m1_checklist.md` to mean docs + config/schema + baseline validation, not runtime completion
 - Aligned `docs/system/config_protocol.md` bridge port examples with `docs/system/ui_bridge_protocol.md`
 - Fixed roadmap version references for `config_protocol.md` and `ui_bridge_protocol.md`

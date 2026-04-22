@@ -5,6 +5,12 @@ description: Chronobar phased delivery execution workflow
 
 本工作流用于指导任务 AI 或协作者按 Chronobar 的正式规划，从 M1 冻结一路推进到产品落地。
 
+执行总原则：
+
+- 以 `docs/roadmap.md`、`docs/engineering/delivery_master_plan.md`、`docs/engineering/implementation_task_packages.md` 作为执行真源
+- 优先推进会决定后续阶段可持续性的能力：本地数据飞轮、session 正确性、回放一致性、sidecar 生命周期治理
+- 不为了“文档看起来完整”额外再造一层决策文档；已确认方向应直接并入计划与任务包
+
 ## 1. 启动前检查
 
 在开始任何阶段前，先阅读：
@@ -55,11 +61,17 @@ description: Chronobar phased delivery execution workflow
 - 预期产出
 - 验证方法
 
+优先级规则：
+- 若存在“决定后续所有阶段是否可持续推进”的任务，优先选这类任务
+- M2 优先 `SimGateway`、Tick 落盘、DuckDB 查询、session 正确性
+- M5 不得跳过 sidecar 生命周期与恢复能力而只做前端外观
+
 ### Step C：实施最小变更
 
 - 只做当前任务包所需最小改动
 - 不顺手扩展下一阶段目标
 - 同步补测试和必要文档
+- 若任务包本身是前置基础设施，不因“看起来不像功能”而推迟
 
 ### Step D：执行验证
 
