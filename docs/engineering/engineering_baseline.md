@@ -558,6 +558,7 @@ apscheduler
 | 项目 | 借鉴点 |
 |------|--------|
 | **vn.py** | 中国期货事件驱动架构的事实标准；BaseGateway 接口设计、MainEngine 协调模式、CTP 回调映射均是 Chronobar 同类问题的成熟解 |
+| **vnpy_ctp** | CTP 网关具体实现；连接状态管理、断线重连策略、meson + pybind11 C++ 扩展编译方案；跨平台（Windows/Linux/macOS）兼容性；适合 P4 实盘交易 CTP 接入 |
 | **nautilus_trader** | Rust/Python 混合架构、强类型 Protocol 定义、回放一致性设计，与 Chronobar 技术方向最接近 |
 
 ### UI/前端参考
@@ -576,6 +577,7 @@ apscheduler
 | **structlog** | 结构化日志库；trace_id 自动传播、JSON 输出、与标准 logging 集成；满足 engineering_baseline.md §10 日志可追踪要求；适合 P3+ 审计追踪 |
 | **ibis** | 便携式 dataframe 库；默认 DuckDB 后端与 Chronobar 存储架构一致；适合 P3 回测系统数据分析、P5 AI 能力数据探索；支持多后端切换 |
 | **polars** | Rust 编写的高性能 DataFrame 引擎；Apache Arrow 列式格式与 DuckDB/Parquet 兼容；适合 P3 回测系统大规模历史数据分析、P5 AI 特征工程 |
+| **qlib** | Microsoft AI 导向量化投资平台；RD-Agent 用于 LLM 驱动的因子挖掘和模型优化；适合 P5 AI 能力阶段；架构非事件驱动，仅作 AI 研究参考 |
 | **FastAPI** | UiBridge 的 HTTP + WebSocket 边界实现的最佳实践 |
 
 **注意：** 以上项目作为参考，不意味着直接复制代码或架构。Chronobar 的设计决策应基于自身需求（桌面客户端、Tauri + React + Python sidecar、DuckDB + Parquet 存储）独立评估后确定。
