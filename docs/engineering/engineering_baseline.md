@@ -558,7 +558,6 @@ apscheduler
 | 项目 | 借鉴点 |
 |------|--------|
 | **vn.py** | 中国期货事件驱动架构的事实标准；BaseGateway 接口设计、MainEngine 协调模式、CTP 回调映射均是 Chronobar 同类问题的成熟解 |
-| **backtrader** | 回测引擎的 Broker 抽象、数据 Feed 接口、策略生命周期设计，与 backtest_protocol.md 高度重叠 |
 | **nautilus_trader** | Rust/Python 混合架构、强类型 Protocol 定义、回放一致性设计，与 Chronobar 技术方向最接近 |
 
 ### UI/前端参考
@@ -573,6 +572,7 @@ apscheduler
 | 项目 | 借鉴点 |
 |------|--------|
 | **Pydantic** | 与 data_protocol.md 中的强类型对象定义直接对应；迁移验证（model_validator）可用于 config migration |
+| **msgspec** | 高性能序列化与验证库；Struct 类型比 dataclasses 快 5-60 倍，适合 Tick/Bar/Event 高性能处理；零开销 schema 验证 |
 | **FastAPI** | UiBridge 的 HTTP + WebSocket 边界实现的最佳实践 |
 
 **注意：** 以上项目作为参考，不意味着直接复制代码或架构。Chronobar 的设计决策应基于自身需求（桌面客户端、Tauri + React + Python sidecar、DuckDB + Parquet 存储）独立评估后确定。
