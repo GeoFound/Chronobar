@@ -12,6 +12,37 @@
 3. 支持连接断开后的自动重连和状态恢复。
 4. 确保回调事件的标准化映射和异常隔离。
 
+### 2.1 网关适配器定位
+
+Chronobar 中的 Gateway 不是某一个供应商 SDK 的同义词，而是平台稳定骨架上的适配器规范。
+
+- CTP / OpenCTP / SimNow / 本地回放输入都应通过同一套骨架接口接入
+- 用户可以根据自己的账户、环境和研究流程选择不同 Gateway 实现
+- 平台负责统一对象语义、恢复策略、能力声明与替换边界
+- 单个 Gateway 实现不应把自己的私有字段、私有线程模型或私有恢复方式上升为平台长期依赖
+
+### 2.2 能力声明与降级规则
+
+不同 Gateway 允许具备不同能力组合，但必须显式声明，而不能由上层猜测。
+
+最小能力面至少包括：
+
+- `market_data`
+- `order_entry`
+- `cancel_order`
+- `account_query`
+- `position_query`
+- `order_query`
+- `replay_input`
+- `local_mock`
+
+要求：
+
+- 不支持的能力必须明确声明为不可用
+- 上层模块、UI Bridge 与 AI 组件在调用前应先检查能力声明
+- 不允许用静默失败或伪成功掩盖能力缺失
+- 本地回放 Gateway、模拟 Gateway 和真实交易 Gateway 可以实现不同能力组合，但都必须遵守同一骨架协议
+
 ## 3. 连接状态枚举
 
 ```python
@@ -22,6 +53,17 @@ class GatewayStatus(str, Enum):
     AUTHENTICATED = "authenticated"
     DISCONNECTING = "disconnecting"
     ERROR = "error"
+
+@dataclass(slots=True)
+class GatewayCapabilities:
+    market_data: bool = True
+    order_entry: bool = False
+    cancel_order: bool = False
+    account_query: bool = False
+    position_query: bool = False
+    order_query: bool = False
+    replay_input: bool = False
+    local_mock: bool = False
 ```
 
 ## 4. BaseGateway 接口
@@ -32,6 +74,7 @@ class GatewayStatus(str, Enum):
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Callable, Optional
+from dataclasses import dataclass
 
 class BaseGateway(ABC):
     @abstractmethod
@@ -75,13 +118,13 @@ class BaseGateway(ABC):
         ...
 
     @abstractmethod
-    def query_orders(self) -> list[Order]:
-        """查询委托信息"""
+    def get_status(self) -> GatewayStatus:
+        """获取连接状态"""
         ...
 
     @abstractmethod
-    def get_status(self) -> GatewayStatus:
-        """获取连接状态"""
+    def get_capabilities(self) -> GatewayCapabilities:
+        """获取网关能力声明"""
         ...
 ```
 
@@ -215,6 +258,12 @@ class ReconnectPolicy:
 - 运行时通过环境变量注入（如 `GATEWAY_PASSWORD_<gateway_name>`）
 - 配置文件中的 password 字段仅作为占位符或引用环境变量名
 
+### 7.3 连接资产边界
+
+- 网关配置、地址映射、能力声明与恢复策略属于用户连接资产的一部分
+- 凭据、认证码与口令不属于可公开导出的普通配置样例
+- AI 可以辅助生成连接配置候选产物和能力说明，但不得静默读取、持久化或外送凭据
+
 ## 8. 网关实现要求
 
 ### 8.1 必须实现的方法
@@ -227,7 +276,14 @@ class ReconnectPolicy:
 - 回调必须在主线程或事件线程中执行
 - 禁止在回调中直接修改网关内部状态
 
-### 8.3 资源清理
+### 8.3 能力声明与降级
+
+- 所有网关实现必须提供能力声明对象
+- 上层若调用未声明支持的能力，应返回明确错误或拒绝结果
+- 不允许把“当前未实现”伪装为“调用成功但无结果”
+- Gateway 的能力缺口必须允许 UI、策略宿主和 AI 助手显示降级路径
+
+### 8.4 资源清理
 
 - disconnect 必须释放所有资源
 - 订阅必须在 disconnect 时取消
@@ -256,10 +312,22 @@ class ReconnectPolicy:
     max_delay: float = 60.0
     backoff_factor: float = 2.0
 
+@dataclass(slots=True)
+class GatewayCapabilities:
+    market_data: bool = True
+    order_entry: bool = False
+    cancel_order: bool = False
+    account_query: bool = False
+    position_query: bool = False
+    order_query: bool = False
+    replay_input: bool = False
+    local_mock: bool = False
+
 class BaseGateway(ABC):
     def __init__(self, gateway_name: str):
         self.gateway_name = gateway_name
         self._status = GatewayStatus.DISCONNECTED
+        self._capabilities = GatewayCapabilities()
         self._callback: Optional[GatewayCallback] = None
         self._reconnect_policy = ReconnectPolicy()
         self._event_emitter: Optional[Callable[[str, dict], None]] = None
@@ -324,6 +392,10 @@ class BaseGateway(ABC):
     def get_status(self) -> GatewayStatus:
         """获取连接状态"""
         return self._status
+
+    def get_capabilities(self) -> GatewayCapabilities:
+        """获取网关能力声明"""
+        return self._capabilities
 
     def _emit_tick(self, tick: Tick) -> None:
         """发送行情回调"""

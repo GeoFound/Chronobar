@@ -364,10 +364,12 @@ Closes #123
 
 ## 11. AI 协作约束
 
+本节约束的是**仓库 AI**：即参与仓库设计、协议收敛、代码生成、测试补齐、维护、迁移与重构的 AI 协作行为。
+它**不**定义 Chronobar 产品内部面向产品使用者的 **产品 AI**；产品 AI 的能力范围、确认点与用户可见边界应以 `docs/system/ai_assistant_architecture.md` 与 `docs/system/ai_assistant_product_contract.md` 为准。
+
 ### 11.1 生成前声明模板
 
 AI 在生成代码前必须声明：
-
 ```
 本次生成声明：
 - 所属层：Infrastructure / Core / Gateway / UI Bridge / Plugin / Risk / Backtest
@@ -386,7 +388,29 @@ AI 在生成代码前必须声明：
 - AI 生成桥接接口必须同步更新契约说明
 - AI 生成代码在合并前必须通过测试与类型检查
 
-### 11.3 行为准则
+### 11.3 长期结构稳定性要求
+
+对仓库 AI 而言，长期演进应优先保证以下结构稳定性：
+
+- **对象稳定性**：优先沉淀正式对象、字段、关系和构建态/运行态边界，而不是先扩写页面语义。
+- **状态稳定性**：重要对象应逐步显式化状态机，减少隐含状态和流程猜测。
+- **证据稳定性**：AI 生成的候选对象、解释和变更建议应绑定来源、验证结果与确认语义。
+- **政策稳定性**：市场能力、区域差异、权限约束与确认要求优先数据化，而不是硬编码分支。
+- **迁移稳定性**：对象版本、Schema 迁移、回放兼容和审计保留应作为长期重写与跨国家迁移的前提。
+
+长期看，仓库至少应把以下契约族逐步做成正式对象，而不是长期停留在口头约定：
+- **Artifact Graph / User Asset Dependency Model**：描述配置、工作区、研究资产、策略资产、发布记录、候选产物与正式对象之间的依赖关系，用于影响分析、回滚、迁移与重写。
+- **State Machine Contract**：为研究对象、候选产物、网关适配、发布对象等关键资产定义显式状态与迁移规则。
+- **Evidence Bundle Contract**：统一来源对象、证据快照、推理约束、最小验证结果与确认前提示，避免 AI 输出只剩聊天文本。
+- **AI Change Set Contract**：统一多对象变更、依赖关系、风险等级、最小验证、回滚计划与确认回执。
+- **Capability Registry Contract**：让网关、市场、AI、研究引擎、存储与合规能力通过声明与差异化能力集进行扩展，而不是改主流程。
+- **Policy Engine as Data Contract**：把 AI 权限、发布策略、区域限制、双确认要求与外部访问策略优先写成数据与规则，而不是硬编码分支。
+- **Migration / Portability Contract**：显式记录对象版本、Schema 迁移规则、审计保留、外部引用保留与回放兼容策略。
+- **Storage Boundary Contract**：明确 append-only audit store、config/object store、time-series market store、artifact graph store、semantic index 与 transient cache 的边界，不把所有状态混入单一存储口径。
+- **AI Session Model 与 Memory Governance**：把对象上下文、工作区上下文、研究上下文、证据包、待确认变更集以及记忆启用/删除/隔离规则做成可治理边界。
+- **Regional Market / Compliance Abstraction Contract**：把交易日历、合约规范、订单能力、账户结算与监管约束抽象成可迁移、可本地化的正式层。
+
+### 11.4 行为准则
 
 **权衡：** 以下准则偏向谨慎而非速度。对于简单任务，请酌情判断。
 

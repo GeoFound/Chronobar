@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/research.schema.json",
+  "title": "ResearchConfig",
+  "type": "object",
+  "required": ["research"],
+  "properties": {
+    "research": {
+      "type": "object",
+      "required": ["factor_sets"],
+      "properties": {
+        "factor_sets": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "required": ["factors", "labels", "experiments", "publish_records"],
+            "properties": {
+              "factors": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["id", "type", "input", "window"],
+                  "properties": {
+                    "id": { "type": "string" },
+                    "type": { "type": "string" },
+                    "input": { "type": "string" },
+                    "window": { "type": "integer", "minimum": 1 }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "labels": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "type": "object",
+                  "required": ["type", "horizon"],
+                  "properties": {
+                    "type": { "type": "string" },
+                    "horizon": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "experiments": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "type": "object",
+                  "required": ["universe", "split", "cost_model", "publish_target"],
+                  "properties": {
+                    "universe": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": { "type": "string" }
+                    },
+                    "split": { "type": "string" },
+                    "cost_model": { "type": "string" },
+                    "publish_target": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "publish_records": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["experiment_id", "status", "target", "confirmed"],
+                  "properties": {
+                    "experiment_id": { "type": "string" },
+                    "status": { "type": "string", "enum": ["candidate", "published", "rejected"] },
+                    "target": { "type": "string" },
+                    "confirmed": { "type": "boolean" }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "data": {
+    "workspace_id": "research.default",
+    "factor_set_id": "intraday_alpha_v1",
+    "factor_filters": {
+      "search": "",
+      "tags": ["volatility", "momentum"],
+      "status": "candidate"
+    },
+    "comparison_set": ["exp_001", "exp_002"],
+    "publish_queue": [
+      {
+        "candidate_id": "publish-candidate-001",
+        "experiment_id": "exp_001",
+        "target": "workspace.default.factor_board",
+        "status": "pending_confirmation"
+      }
+    ]
+  },
+  "trace_id": "trace-research-workspace-001"
+}

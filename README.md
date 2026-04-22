@@ -113,6 +113,7 @@ graph LR
 ## AI Assistant 补充设计文档
 
 以下两份文档用于定义 Chronobar 的 AI Assistant 产品蓝图。它们是对现有协议与系统架构的补充设计，不改变 M1 正式基线文档数量。
+它们约束的是**产品 AI**：也就是 Chronobar 产品内部面向产品使用者的 AI 能力；仓库设计、代码生成、测试补齐、维护与迁移过程中使用的 **仓库 AI** 仍以 `ai-instructions.md` 与 `docs/engineering/engineering_baseline.md` 为准。
 
 | 文档 | 核心职责 | 适用阶段 |
 |------|---------|---------|

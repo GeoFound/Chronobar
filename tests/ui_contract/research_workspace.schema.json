@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/ui_contract/research_workspace.schema.json",
+  "title": "ResearchWorkspaceQueryResponse",
+  "type": "object",
+  "required": ["ok", "data", "trace_id"],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "data": {
+      "type": "object",
+      "required": ["workspace_id", "factor_set_id", "factor_filters", "comparison_set", "publish_queue"],
+      "properties": {
+        "workspace_id": { "type": "string" },
+        "factor_set_id": { "type": "string" },
+        "factor_filters": {
+          "type": "object",
+          "required": ["search", "tags", "status"],
+          "properties": {
+            "search": { "type": "string" },
+            "tags": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "status": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "comparison_set": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "publish_queue": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["candidate_id", "experiment_id", "target", "status"],
+            "properties": {
+              "candidate_id": { "type": "string" },
+              "experiment_id": { "type": "string" },
+              "target": { "type": "string" },
+              "status": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "trace_id": { "type": "string" }
+  },
+  "additionalProperties": false
+}

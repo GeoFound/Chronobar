@@ -83,6 +83,15 @@ UI Bridge 包含三类接口：
 - alert.get_recent
 - log.get_recent
 - plugin.get_enabled
+- ai.get_state
+- ai.get_pending_changes
+- ai.get_memory_status
+- ai.get_external_context_status
+- research.get_workspace
+- research.list_factors
+- research.get_experiment
+- research.compare_experiments
+- research.get_publish_records
 
 ### 5.3 查询结果约束
 
@@ -131,6 +140,8 @@ UI Bridge 包含三类接口：
 - `CHART_SNAPSHOT_NOT_FOUND` - 图表快照不存在
 - `PLUGIN_NOT_FOUND` - 插件不存在
 - `QUERY_INVALID_PARAMS` - 查询参数无效
+- `AI_STATE_NOT_FOUND` - AI 状态不存在或不可用
+- `AI_MEMORY_NOT_FOUND` - 记忆条目不存在
 
 **命令错误码：**
 - `COMMAND_INVALID_PARAMS` - 命令参数无效
@@ -142,6 +153,10 @@ UI Bridge 包含三类接口：
 - `INVALID_COMMAND` - 无效命令
 - `INVALID_INTERVAL` - 无效周期
 - `REPLAY_NOT_READY` - 回放未就绪
+- `AI_CONFIRMATION_REQUIRED` - AI 修改类动作需要用户确认
+- `AI_ARTIFACT_INVALID` - AI 候选产物未通过最小校验
+- `AI_EXTERNAL_CONTEXT_DISABLED` - 外部上下文未启用或未授权
+- `AI_MEMORY_POLICY_DENIED` - 当前记忆策略不允许该操作
 
 **订阅错误码：**
 - `SUBSCRIPTION_INVALID_PARAMS` - 订阅参数无效
@@ -165,6 +180,11 @@ Command 是意图表达，不是状态读取。
 - 启用 / 停用插件
 - 确认告警
 - 导出回放结果
+- 提交 AI 请求
+- 确认或拒绝 AI 候选产物
+- 保存研究工作区
+- 对研究候选对象执行发布确认
+- 清理 AI 会话状态或删除用户记忆
 
 ### 6.2 命令类别
 
@@ -181,6 +201,15 @@ Command 是意图表达，不是状态读取。
 - plugin.enable
 - plugin.disable
 - alert.ack
+- ai.submit_prompt
+- ai.apply_candidate
+- ai.reject_candidate
+- ai.clear_session_state
+- ai.delete_memory_entry
+- ai.set_external_context_mode
+- research.save_workspace
+- research.publish_candidate
+- research.reject_publish_candidate
 
 ### 6.3 命令约束
 
@@ -188,6 +217,9 @@ Command 是意图表达，不是状态读取。
 - 命令成功后，应由事件流通知前端状态变化，而不是要求前端假定成功。
 - 命令处理失败必须返回错误码和 trace_id。
 - 命令不得直接暴露底层模块实例。
+- AI 修改类命令在真正应用前必须返回待确认状态，而不是直接静默写入正式对象。
+- 研究候选对象的发布命令必须复用标准确认链路，不得跳过待确认状态直接写入运行态对象。
+- AI 相关命令必须保留来源、最小校验结果和用户确认回执。
 
 ### 6.4 命令响应格式
 
@@ -226,6 +258,10 @@ Command 是意图表达，不是状态读取。
 - workspace 范围订阅
 - replay 进度订阅
 - alert / log 订阅
+- ai 会话范围订阅
+- ai 待确认变更订阅
+- research 工作区范围订阅
+- research 发布状态订阅
 
 ### 7.3 推送事件来源
 
@@ -234,6 +270,7 @@ Command 是意图表达，不是状态读取。
 - WorkspaceManager 变更事件
 - PluginHost 输出事件
 - UiBridge 自身桥接状态事件
+- AI Assistant 审计与状态事件
 
 ### 7.4 推送事件格式
 
@@ -258,6 +295,7 @@ Command 是意图表达，不是状态读取。
 - 前端不得依赖未声明字段。
 - 前端必须允许事件乱序保护或以快照纠正。
 - 前端重连后必须支持重新拉取快照再继续订阅。
+- AI 待确认变更必须以标准结构展示影响范围、来源和校验结果，不得依赖聊天正文自行解析。
 
 ## 8. 工作区同步
 
@@ -272,6 +310,10 @@ Command 是意图表达，不是状态读取。
 - 联动组
 - 当前主题
 - 回放上下文
+- 当前研究工作区
+- 当前因子表筛选条件
+- 当前实验对比集合
+- 当前待发布研究候选对象
 
 ### 8.2 同步原则
 
@@ -287,6 +329,10 @@ Command 是意图表达，不是状态读取。
 - SUBSCRIPTION_CHANGED
 - THEME_CHANGED
 - ACTIVE_INSTRUMENT_CHANGED
+- RESEARCH_WORKSPACE_CHANGED
+- FACTOR_CATALOG_CHANGED
+- EXPERIMENT_COMPARISON_CHANGED
+- RESEARCH_PUBLISH_STATE_CHANGED
 
 ## 9. 图表数据边界
 
@@ -335,6 +381,8 @@ Command 是意图表达，不是状态读取。
 - 未授权插件输出不得直接暴露到展示层。
 - Bridge 不得暴露数据库连接、文件句柄和核心对象引用。
 - 高风险命令必须具备额外校验或确认机制。
+- AI 相关桥接接口不得把未确认候选产物视为已应用状态。
+- 外部上下文访问状态、记忆状态和候选产物应用状态必须对用户可见。
 
 ## 13. 测试要求
 
@@ -346,3 +394,7 @@ Command 是意图表达，不是状态读取。
 - 工作区保存与恢复测试
 - 回放模式前端订阅一致性测试
 - 错误码稳定性测试
+- AI 待确认变更结构契约测试
+- AI 记忆删除与外部上下文授权命令测试
+- 研究工作区查询 / 保存契约测试
+- 实验对比与研究发布确认命令测试

@@ -1,0 +1,44 @@
+{
+  "candidate_id": "research-publish-001",
+  "kind": "research_publish",
+  "status": "pending_confirmation",
+  "target": {
+    "scope": "research.factor_sets.intraday_alpha_v1",
+    "path": "publish_records[0]",
+    "publish_target": "workspace.default.factor_board"
+  },
+  "validation": {
+    "ok": true,
+    "checks": [
+      "experiment_reproducible",
+      "publish_target_declared",
+      "confirmation_required"
+    ]
+  },
+  "sources": [
+    {
+      "type": "chronobar_doc",
+      "title": "ui_bridge_protocol.md",
+      "uri": "docs/system/ui_bridge_protocol.md"
+    },
+    {
+      "type": "research_asset",
+      "title": "intraday_alpha_v1.exp_001",
+      "uri": "research://intraday_alpha_v1/experiments/exp_001"
+    }
+  ],
+  "diff_summary": [
+    {
+      "field": "publish_records[0].status",
+      "before": "candidate",
+      "after": "published"
+    },
+    {
+      "field": "workspace.default.factor_board",
+      "before": "not_present",
+      "after": "intraday_alpha_v1.exp_001"
+    }
+  ],
+  "reversible": true,
+  "trace_id": "trace-research-publish-001"
+}

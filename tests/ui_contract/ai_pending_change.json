@@ -1,0 +1,37 @@
+{
+  "candidate_id": "candidate-001",
+  "kind": "workspace_config",
+  "status": "pending_confirmation",
+  "target": {
+    "scope": "workspace.default",
+    "path": "workspace.default.chart_template"
+  },
+  "validation": {
+    "ok": true,
+    "checks": [
+      "schema_valid",
+      "loadable_structure"
+    ]
+  },
+  "sources": [
+    {
+      "type": "chronobar_doc",
+      "title": "config_protocol.md",
+      "uri": "docs/system/config_protocol.md"
+    },
+    {
+      "type": "user_instruction",
+      "title": "用户当前会话请求",
+      "uri": "session://current"
+    }
+  ],
+  "diff_summary": [
+    {
+      "field": "chart_template",
+      "before": "futures_intraday_v1",
+      "after": "futures_intraday_ai_v1"
+    }
+  ],
+  "reversible": true,
+  "trace_id": "trace-ai-change-001"
+}

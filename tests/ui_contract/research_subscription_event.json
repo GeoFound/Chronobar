@@ -1,0 +1,19 @@
+{
+  "event_id": "event-research-001",
+  "event_type": "RESEARCH_PUBLISH_STATE_CHANGED",
+  "source": "ui_bridge.research.publish",
+  "ts": "2026-04-22T19:55:00+08:00",
+  "instrument_id": "rb2509",
+  "session_id": "research.intraday_alpha_v1.exp_001",
+  "payload": {
+    "candidate_id": "research-publish-001",
+    "experiment_id": "exp_001",
+    "factor_set_id": "intraday_alpha_v1",
+    "previous_status": "candidate",
+    "current_status": "pending_confirmation",
+    "publish_target": "workspace.default.factor_board"
+  },
+  "trace_id": "trace-research-subscription-001",
+  "replayable": false,
+  "version": "1.2"
+}

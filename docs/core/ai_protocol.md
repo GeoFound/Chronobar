@@ -170,23 +170,46 @@ AI 风控检查器只能发出以下事件：
 
 ### 7.1 系统配置
 
-在 `docs/system/config_protocol.md` 中定义的 `ai_config` 节点：
+在 `docs/system/config_protocol.md` 中定义的 `ai` 节点：
 
 ```json
 {
   "ai": {
     "enabled": true,
     "model_provider": "local",
-    "api_endpoint": null,
-    "api_key": null,
+    "local_model_path": "./models/qwen2.5-coder",
+    "api_endpoint": "",
+    "api_key": "",
     "max_tokens": 4096,
     "timeout": 30,
+    "temperature": 0.7,
     "features": {
       "copilot": true,
-      "signal": true,
-      "backtest_analyst": true,
-      "risk_enhancement": true,
-      "auto_tuning": false
+      "signal_generation": true,
+      "backtest_analysis": true,
+      "risk_check": true,
+      "auto_tuning": false,
+      "artifact_builder": true,
+      "external_context": true,
+      "memory": true
+    },
+    "external_context": {
+      "enabled": false,
+      "whitelist_mode": "strict",
+      "allowed_sources": ["shfe", "dce", "czce", "cffex", "ine"],
+      "require_confirmation": true
+    },
+    "memory": {
+      "mode": "session_only",
+      "retention_days": 30,
+      "allow_user_delete": true,
+      "capture_user_preferences": true
+    },
+    "apply_policy": {
+      "require_confirmation": true,
+      "allow_workspace_write": true,
+      "allow_strategy_write": true,
+      "allow_high_risk_actions": false
     }
   }
 }
@@ -271,6 +294,8 @@ class LLMProvider(Protocol):
 - AI 插件必须受同等权限模型约束
 - `call_external_api` 权限仅授予 ai-agent 插件
 - LLM API Key 权限受限，不能暴露给其他插件
+- 记忆能力由宿主统一治理，AI 插件不得自行持久化未授权用户记忆
+- AI 生成的候选产物在被用户确认前，不得替代正式配置、策略文件或高风险运行参数
 
 ### 8.2 资源约束
 

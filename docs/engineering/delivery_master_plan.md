@@ -10,6 +10,7 @@
 
 - Chronobar 不是单纯追求“产品壳”或“协议完备度”，而是要把中国个人量化交易从脚本工程推进到桌面工作站形态
 - Chronobar 不是做“大而全”的平台，而是做“全而小”的个人工具：覆盖个人交易者完整工作流，但严格限制范围，不追求机构平台式膨胀
+- Chronobar 提供稳定骨架、接口纪律和安全边界，用户通过配置、插件、策略、工作区和 AI 协作决定系统最终长成什么样
 - 早期阶段的核心目标不是接口广度，而是先形成本地数据飞轮、可复验闭环和中国期货语义正确性
 - 一些能力虽然工程成本高，但属于必须前置的基础设施，例如 Tick 持续落盘、回放一致性、sidecar 生命周期治理、桌面故障恢复入口
 - Chronobar 默认服务“用户拥有自己的工具”这一前提：数据、策略、日志、回放资产优先保留在用户本地，尽量减少对云端、第三方平台和外部托管链路的依赖
@@ -35,6 +36,7 @@
 - **协议先行**：所有实现必须以正式协议为边界，不反向发明字段。
 - **全而小**：优先覆盖个人交易者的完整核心工作流，而不是向平台化、大而全工具链无限扩张。
 - **用户主权优先**：数据、策略、回放、日志与配置优先归用户本地持有，尽量减少对外部平台、云服务与托管链路的依赖。
+- **骨架稳定优先**：用户可决定策略、指标、工作区、连接方式与 AI 协作方式，但不能破坏平台骨架、风控总边界、权限模型与审计要求。
 - **竖切优先**：优先做可验证的最小闭环，而不是横向铺满模块空壳。
 - **数据飞轮优先**：优先把 Tick 持续采集、落盘、查询、回放做成一条会积累资产的主链路。
 - **中国期货语义优先**：trading_date、calendar_date、session_type、session 边界必须视为产品级正确性要求。
@@ -91,6 +93,7 @@
 - 冻结配置样例与 Schema
 - 冻结最小工程门禁和基础测试入口
 - 形成可直接进入实现的稳定地基
+- 明确仓库 AI 与产品 AI 的边界，并长期把对象模型、状态机、证据包、能力注册表、策略数据化、迁移契约与存储边界等基础能力写成正式契约
 
 ### 5.2 进入条件
 
@@ -136,6 +139,7 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 - 建立 Python 运行时代码目录结构
 - 实现标准对象和基础异常层
 - 实现 EventEngine
+- 冻结 Gateway Adapter 最小规范与能力声明路径
 - 实现 RuleEngine 最小夜盘/交易日判定
 - 实现 BarAggregator
 - 实现至少 1 个 Indicator
@@ -154,6 +158,7 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
   - Indicator 输出
   - UiBridge 可消费的 snapshot / event
 - 夜盘跨日场景下，Bar 与 trading_date / session 归属一致
+- `SimGateway` 或等价输入源能够声明自己的能力范围与降级边界
 - 关键单元测试和最小集成测试通过
 - 运行链路可由开发者在本地复现
 
@@ -193,6 +198,7 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 - 插件加载顺序与依赖解析
 - 插件异常隔离
 - 线程级隔离与权限门禁（作为 M3 默认实现）
+- 用户资产兼容与迁移规则（工作区 / 插件配置 / 策略引用）
 - 至少 2 个 builtin 样例插件
 - 至少 1 个可以一键运行的内建信号/指标闭环样板
 
@@ -202,6 +208,7 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 - 插件异常不影响主引擎稳定
 - 未授权调用被拒绝
 - 缺失插件时工作区可降级恢复
+- 工作区、插件配置与策略引用在版本变化后仍具备兼容或降级路径
 - 内建样板可在无外部网络条件下跑通
 
 ### 7.4 回滚条件
@@ -221,15 +228,18 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 ### 8.1 目标
 
 实现历史数据驱动的回测闭环，并保证与实时链路共享协议、关键行为和数据口径。
+在此基础上建立最小研究骨架，使多因子研究、实验配置和结果复验能够成为用户可积累资产。
 
 ### 8.2 必做工作包
 
 - HistoricalDataLoader（优先消费本地落盘数据）
 - Replay Engine
 - BacktestEngine
+- 因子定义 / 标签定义 / 实验配置的最小对象模型
 - OrderMatcher
 - 回测统计模块
 - 回测结果导出
+- 因子评估与研究报告最小结构
 - 回放一致性测试
 
 ### 8.3 退出条件
@@ -239,6 +249,7 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 - 与实时模式共享协议对象和关键计算逻辑
 - 与本地数据落盘 / 回放链路共享统一数据口径
 - 回测报告至少包含收益、回撤、胜率、交易明细
+- 至少一条研究配置可复跑，并产出可归档的因子或实验结果
 
 ### 8.4 回滚条件
 
@@ -296,16 +307,27 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 
 按 [`../system/ai_assistant_architecture.md`](../system/ai_assistant_architecture.md) 与 [`../system/ai_assistant_product_contract.md`](../system/ai_assistant_product_contract.md) 将 AI Assistant 作为受控产品能力接入。
 
+目标不是只做聊天问答，而是让 AI 在用户主权前提下提供：
+
+- 可用候选产物生成与确认应用链路
+- 受控真实世界外部上下文访问
+- 可管理、可删除、可审计的记忆协作
+- 受控的研究编排、多因子假设整理与结果解释辅助
+
 ### 10.2 必做工作包
 
 - Intent Router
 - Policy Engine
 - Knowledge Retriever
+- External Context Gateway
 - Tool Executor
+- Candidate Validator / Change Set Builder
 - Evidence Binder
 - Answer Composer
+- Memory Service
 - Audit Logger
-- 至少 3 个能力面：产品问答 / 回测解读 / 风控解释
+- 首批解释能力面：产品问答 / 回测解读 / 风控解释
+- 后续能力面：用户资产构建 / 真实世界研究 / 多因子研究编排
 
 说明：AI 不作为 Chronobar 早期主轴，不以自主交易、公开投顾或无确认自动执行为方向。
 
@@ -314,18 +336,25 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 - 回答可显示来源与不确定性
 - 高风险请求可拒答
 - 修改类动作要求确认
+- 候选产物具备最小可用校验与影响范围展示
+- 真实世界外部上下文访问可见、可控、可关闭
+- 记忆可查看、可删除、可说明用途
 - 任务级评测可执行
+- 研究 Copilot 能输出可复跑研究配置或研究候选产物，且不会绕过发布边界进入运行态
 
 ### 10.4 回滚条件
 
 - AI 助手越权调用
 - 无证据强答频发
 - 产品层无法稳定表达来源 / 不确定性 / 确认点
+- 候选产物应用链路无法保证确认前不落正式对象
+- 外部上下文或记忆能力出现静默启用、静默持久化或不可审计行为
 
 ### 10.5 回滚动作
 
 - 回退到仅文档问答模式
 - 暂停外部搜索与高风险工具调用
+- 暂停候选产物直接应用与长期记忆能力
 - 优先修复策略引擎与审计链路
 
 ## 11. P6：发布准备与产品落地
@@ -439,7 +468,7 @@ SimGateway(or equivalent local replay source) -> Tick persistence -> DuckDB quer
 | P2 / M3 | 插件权限矩阵生效；插件不可越权读策略或注入订单；异常插件不可污染主引擎 |
 | P3 / M4 | 回测结果不被外送；撮合路径不可被篡改；回测审计日志完整 |
 | P4 / M5 | sidecar 通信不可被本地其他进程劫持；前端不暴露未授权数据；用户可查看安全状态 |
-| P5 / M6 | AI 输入/输出可审计；外部 API 调用可见且可关闭；AI 不可绕过确认点或风控 |
+| P5 / M6 | AI 输入/输出可审计；外部 API 调用可见且可关闭；AI 不可绕过确认点或风控；记忆与候选产物应用均可管理 |
 
 ## 14. 实施顺序建议
 

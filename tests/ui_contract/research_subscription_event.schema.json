@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/ui_contract/research_subscription_event.schema.json",
+  "title": "ResearchSubscriptionEvent",
+  "type": "object",
+  "required": ["event_id", "event_type", "source", "ts", "instrument_id", "session_id", "payload", "trace_id", "replayable", "version"],
+  "properties": {
+    "event_id": { "type": "string" },
+    "event_type": { "type": "string", "const": "RESEARCH_PUBLISH_STATE_CHANGED" },
+    "source": { "type": "string" },
+    "ts": { "type": "string", "format": "date-time" },
+    "instrument_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "payload": {
+      "type": "object",
+      "required": ["candidate_id", "experiment_id", "factor_set_id", "previous_status", "current_status", "publish_target"],
+      "properties": {
+        "candidate_id": { "type": "string" },
+        "experiment_id": { "type": "string" },
+        "factor_set_id": { "type": "string" },
+        "previous_status": { "type": "string" },
+        "current_status": { "type": "string" },
+        "publish_target": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "trace_id": { "type": "string" },
+    "replayable": { "type": "boolean" },
+    "version": { "type": "string" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chronobar.local/schemas/ui_contract/research_publish_candidate.schema.json",
+  "title": "ResearchPublishCandidate",
+  "type": "object",
+  "required": ["candidate_id", "kind", "status", "target", "validation", "sources", "diff_summary", "reversible", "trace_id"],
+  "properties": {
+    "candidate_id": { "type": "string" },
+    "kind": { "type": "string", "const": "research_publish" },
+    "status": { "type": "string", "const": "pending_confirmation" },
+    "target": {
+      "type": "object",
+      "required": ["scope", "path", "publish_target"],
+      "properties": {
+        "scope": { "type": "string" },
+        "path": { "type": "string" },
+        "publish_target": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "required": ["ok", "checks"],
+      "properties": {
+        "ok": { "type": "boolean" },
+        "checks": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "title", "uri"],
+        "properties": {
+          "type": { "type": "string" },
+          "title": { "type": "string" },
+          "uri": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "diff_summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "before", "after"],
+        "properties": {
+          "field": { "type": "string" },
+          "before": { "type": "string" },
+          "after": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reversible": { "type": "boolean" },
+    "trace_id": { "type": "string" }
+  },
+  "additionalProperties": false
+}

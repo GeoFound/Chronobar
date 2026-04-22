@@ -59,11 +59,10 @@
             "max_tokens",
             "timeout",
             "temperature",
-            "enable_copilot",
-            "enable_signal_generation",
-            "enable_risk_check",
-            "enable_backtest_analysis",
-            "enable_auto_tuning"
+            "features",
+            "external_context",
+            "memory",
+            "apply_policy"
           ],
           "properties": {
             "enabled": { "type": "boolean" },
@@ -77,11 +76,81 @@
             "max_tokens": { "type": "integer", "minimum": 1 },
             "timeout": { "type": "integer", "minimum": 1 },
             "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
-            "enable_copilot": { "type": "boolean" },
-            "enable_signal_generation": { "type": "boolean" },
-            "enable_risk_check": { "type": "boolean" },
-            "enable_backtest_analysis": { "type": "boolean" },
-            "enable_auto_tuning": { "type": "boolean" }
+            "features": {
+              "type": "object",
+              "required": [
+                "copilot",
+                "signal_generation",
+                "risk_check",
+                "backtest_analysis",
+                "auto_tuning",
+                "artifact_builder",
+                "external_context",
+                "memory"
+              ],
+              "properties": {
+                "copilot": { "type": "boolean" },
+                "signal_generation": { "type": "boolean" },
+                "risk_check": { "type": "boolean" },
+                "backtest_analysis": { "type": "boolean" },
+                "auto_tuning": { "type": "boolean" },
+                "artifact_builder": { "type": "boolean" },
+                "external_context": { "type": "boolean" },
+                "memory": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            },
+            "external_context": {
+              "type": "object",
+              "required": [
+                "enabled",
+                "whitelist_mode",
+                "allowed_sources",
+                "require_confirmation"
+              ],
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "whitelist_mode": { "type": "string", "enum": ["strict", "advisory"] },
+                "allowed_sources": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "require_confirmation": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            },
+            "memory": {
+              "type": "object",
+              "required": [
+                "mode",
+                "retention_days",
+                "allow_user_delete",
+                "capture_user_preferences"
+              ],
+              "properties": {
+                "mode": { "type": "string", "enum": ["disabled", "session_only", "user_scoped"] },
+                "retention_days": { "type": "integer", "minimum": 0 },
+                "allow_user_delete": { "type": "boolean" },
+                "capture_user_preferences": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            },
+            "apply_policy": {
+              "type": "object",
+              "required": [
+                "require_confirmation",
+                "allow_workspace_write",
+                "allow_strategy_write",
+                "allow_high_risk_actions"
+              ],
+              "properties": {
+                "require_confirmation": { "type": "boolean" },
+                "allow_workspace_write": { "type": "boolean" },
+                "allow_strategy_write": { "type": "boolean" },
+                "allow_high_risk_actions": { "type": "boolean" }
+              },
+              "additionalProperties": false
+            }
           },
           "additionalProperties": false
         }

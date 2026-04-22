@@ -23,8 +23,32 @@ system:
     max_tokens: 4096
     timeout: 30
     temperature: 0.7
-    enable_copilot: true
-    enable_signal_generation: false
-    enable_risk_check: false
-    enable_backtest_analysis: false
-    enable_auto_tuning: false
+    features:
+      copilot: true
+      signal_generation: false
+      risk_check: false
+      backtest_analysis: false
+      auto_tuning: false
+      artifact_builder: true
+      external_context: true
+      memory: true
+    external_context:
+      enabled: false
+      whitelist_mode: "strict"
+      allowed_sources:
+        - "shfe"
+        - "dce"
+        - "czce"
+        - "cffex"
+        - "ine"
+      require_confirmation: true
+    memory:
+      mode: "session_only"
+      retention_days: 30
+      allow_user_delete: true
+      capture_user_preferences: true
+    apply_policy:
+      require_confirmation: true
+      allow_workspace_write: true
+      allow_strategy_write: true
+      allow_high_risk_actions: false

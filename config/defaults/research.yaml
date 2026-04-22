@@ -1,0 +1,30 @@
+research:
+  factor_sets:
+    intraday_alpha_v1:
+      factors:
+        - id: "rv_01"
+          type: "realized_volatility"
+          input: "close"
+          window: 30
+        - id: "mom_01"
+          type: "return_momentum"
+          input: "close"
+          window: 20
+      labels:
+        next_bar_ret:
+          type: "forward_return"
+          horizon: "5m"
+      experiments:
+        exp_001:
+          universe:
+            - "rb"
+            - "i"
+            - "ag"
+          split: "walk_forward"
+          cost_model: "default_cn_futures"
+          publish_target: "factor_candidate"
+      publish_records:
+        - experiment_id: "exp_001"
+          status: "candidate"
+          target: "workspace.default.factor_board"
+          confirmed: false

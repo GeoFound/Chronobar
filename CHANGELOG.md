@@ -34,6 +34,34 @@ This document tracks version changes across all protocol documents, following [K
   - `docs/engineering/delivery_master_plan.md` now treats data flywheel, replay consistency, and desktop recovery paths as first-class delivery constraints
   - `docs/engineering/implementation_task_packages.md` now turns those priorities into executable task packages for M2-M5
   - `.windsurf/workflows/execute-chronobar-delivery.md` continues to use delivery plan + task packages as the execution source of truth
+  - Strengthened AI Assistant contracts and repository artifacts around user-owned usable outputs instead of one-off drafts:
+    - `docs/system/ai_assistant_product_contract.md` now defines usable candidate artifacts, user-owned outputs, controlled real-world research access, and memory-use disclosure
+    - `docs/system/ai_assistant_architecture.md` now includes candidate validation / change-set building, managed memory tiers, and controlled external-context access as first-class architecture elements
+    - `docs/system/ui_bridge_protocol.md` now defines AI query/command/subscription categories and error codes for confirmation, artifact validation, external context, and memory management
+  - `docs/system/config_protocol.md`, `config/defaults/system.yaml`, `config/schemas/system.schema.json`, and `docs/core/ai_protocol.md` now align on nested AI config for features, external_context, memory, and apply_policy
+  - `docs/engineering/delivery_master_plan.md` and `docs/engineering/implementation_task_packages.md` now treat candidate artifact application, external context, and memory governance as formal P5 delivery work instead of implicit future ideas
+  - Added `tests/ui_contract/ai_pending_change.json` and expanded `tests/test_repo_baseline.py` / `tests/ui_contract/error_codes.json` to anchor the AI confirmation/apply contract in repository samples and baseline checks
+  - Added `tests/ui_contract/research_workspace.json` and `tests/ui_contract/research_publish_candidate.json` to anchor research workspace and publish-confirmation bridge samples in baseline checks
+  - Added `tests/ui_contract/research_subscription_event.json` and expanded research contract assertions to cover query / publish / subscription flows against existing bridge error-code samples
+    - Added `tests/test_ui_contract_research.py` and updated `just docs-check` so research workspace / publish / subscription samples are validated through dedicated protocol-field mapping assertions
+    - Added `tests/ui_contract/research_workspace.schema.json`, `tests/ui_contract/research_publish_candidate.schema.json`, and `tests/ui_contract/research_subscription_event.schema.json` to provide JSON Schema-level contract validation for research UI contract samples, with baseline checks ensuring these schemas exist and samples validate against them
+  - Clarified across `README.md`, `ai-instructions.md`, `docs/engineering/engineering_baseline.md`, `docs/system/ai_assistant_architecture.md`, and `docs/system/ai_assistant_product_contract.md` that repository AI and product AI are distinct layers, and anchored this boundary in `tests/test_repo_baseline.py`
+  - Landed long-term platform foundations in repository governance and system architecture:
+    - `docs/engineering/engineering_baseline.md` now lists the formal contract families that must be gradually formalized over time: Artifact Graph / User Asset Dependency Model, State Machine Contract, Evidence Bundle Contract, AI Change Set Contract, Capability Registry Contract, Policy Engine as Data Contract, Migration / Portability Contract, Storage Boundary Contract, AI Session Model 与 Memory Governance, and Regional Market / Compliance Abstraction Contract
+    - `docs/system/architecture.md` now defines long-term platform foundation sections for object relationships / asset graphs (4.5), state machines / three-domain boundaries (4.6), evidence bundles / change sets / confirmation semantics (4.7), capability registry / policy data / internationalization abstractions (4.8), and migration / replay / storage boundaries (4.9)
+    - `docs/roadmap.md` now includes these long-term platform foundations as M1 deliverables
+    - `docs/engineering/delivery_master_plan.md` now includes repository AI / product AI boundary clarification and long-term platform foundation formalization as P0 goals
+    - `tests/test_repo_baseline.py` now anchors these long-term platform foundations with explicit assertions across architecture, engineering baseline, roadmap, and delivery master plan
+  - Formalized Chronobar as a user-owned futures skeleton platform across system and delivery docs:
+    - `docs/system/architecture.md` now defines the platform as a stable skeleton, adds a user asset model, and separates build-state assembly from run-state execution
+    - `docs/system/ai_assistant_product_contract.md` now positions AI as a user system-assembly copilot, adds gateway/strategy/workspace asset assistance, and reinforces build-state publication before run-state use
+  - `docs/system/ai_assistant_architecture.md` now adds multi-factor research copilot, research-tool boundaries, and research-result repeatability metrics
+  - `docs/system/config_protocol.md` now introduces research config as a first-class protocol layer for factor definitions, experiment configs, and publish records
+  - `config/defaults/research.yaml`, `config/schemas/research.schema.json`, and `tests/test_repo_baseline.py` now anchor research config as a baseline repository artifact with schema validation aligned with config_protocol.md field commitments
+  - `docs/system/ui_bridge_protocol.md` now defines research workspace, factor table, experiment comparison, and publish-confirmation bridge flows, with these commitments anchored in structured UI contract schema tests and sample validation
+  - `docs/system/ai_assistant_product_contract.md` now adds multi-factor research assistance, research-state display, and publish confirmation expectations
+  - `docs/core/gateway_protocol.md` now treats gateways as adapter specifications with explicit capability declaration and degradation rules instead of one-off broker integrations
+  - `docs/engineering/delivery_master_plan.md` and `docs/engineering/implementation_task_packages.md` now carry gateway adapter capability, user asset compatibility, research skeleton, and AI-assisted research responsibilities into phased delivery work
 - Unified M1 wording across `README.md`, `docs/CONTRIBUTING.md`, `docs/roadmap.md`, and `docs/engineering/m1_checklist.md` to mean docs + config/schema + baseline validation, not runtime completion
 - Aligned `docs/system/config_protocol.md` bridge port examples with `docs/system/ui_bridge_protocol.md`
 - Fixed roadmap version references for `config_protocol.md` and `ui_bridge_protocol.md`

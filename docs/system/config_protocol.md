@@ -5,18 +5,19 @@
 本文档定义平台配置分层、覆盖规则、版本治理、迁移要求与校验方式。
 平台所有配置默认采用 YAML 编写，采用 JSON Schema 进行结构校验，并可结合 Pydantic 或自定义 validator 进行业务校验。
 
-本文档的目标是让系统配置、市场配置、规则配置、指标配置和工作区配置具备长期演进能力。
+本文档的目标是让系统配置、市场配置、规则配置、指标配置、研究配置和工作区配置具备长期演进能力。
 所有配置必须可导入、可导出、可迁移、可校验、可回放。
 
 ## 2. 配置分层
 
-平台配置分为五类：
+平台配置分为六类：
 
 1. 系统配置
 2. 市场配置
 3. 规则配置
 4. 指标配置
-5. 工作区配置
+5. 研究配置
+6. 工作区配置
 
 ## 3. 配置总原则
 
@@ -28,6 +29,8 @@
 - UI 不得写入未经 schema 声明的隐式字段。
 - 前端布局配置与业务配置必须分开治理。
 - 工作区配置可以变化较快，但必须保持结构稳定和迁移能力。
+- AI 生成的候选产物与正式配置必须区分治理。
+- AI 对正式对象的写入或应用必须受确认策略约束。
 
 ## 4. 配置结构
 
@@ -59,17 +62,40 @@ system:
     max_tokens: 4096
     timeout: 30
     temperature: 0.7
-    enable_copilot: true  // AI Copilot strategy code generation
-    enable_signal_generation: false  // AI signal plugin
-    enable_risk_check: false  // AI risk checker
-    enable_backtest_analysis: false  // AI backtest analyst
-    enable_auto_tuning: false  // AI auto parameter tuning
+    features:
+      copilot: true
+      signal_generation: false
+      risk_check: false
+      backtest_analysis: false
+      auto_tuning: false
+      artifact_builder: true
+      external_context: true
+      memory: true
+    external_context:
+      enabled: false
+      whitelist_mode: "strict"
+      allowed_sources: ["shfe", "dce", "czce", "cffex", "ine"]
+      require_confirmation: true
+    memory:
+      mode: "session_only"  // enum[disabled, session_only, user_scoped]
+      retention_days: 30
+      allow_user_delete: true
+      capture_user_preferences: true
+    apply_policy:
+      require_confirmation: true
+      allow_workspace_write: true
+      allow_strategy_write: true
+      allow_high_risk_actions: false
 ```
 
 说明：
 - `ui_backend` 用于标识当前展示层实现。
 - `bridge` 定义前端与核心进程的桥接方式。
 - `bridge` 的实现方式可替换，但语义边界应保持稳定。
+- `ai.features` 用于声明当前允许暴露给产品层的 AI 能力面。
+- `ai.external_context` 用于约束真实世界访问能力，必须受白名单和确认策略控制。
+- `ai.memory` 用于声明默认记忆模式和用户管理边界。
+- `ai.apply_policy` 用于约束 AI 生成候选产物后是否允许进入正式对象写入路径。
 
 ### 4.2 市场配置
 
@@ -126,7 +152,45 @@ indicator:
       width: 2
 ```
 
-### 4.5 工作区配置
+### 4.5 研究配置
+
+```yaml
+research:
+  factor_sets:
+    intraday_alpha_v1:
+      factors:
+        - id: "rv_01"
+          type: "realized_volatility"
+          input: "close"
+          window: 30
+        - id: "mom_01"
+          type: "return_momentum"
+          input: "close"
+          window: 20
+      labels:
+        next_bar_ret:
+          type: "forward_return"
+          horizon: "5m"
+      experiments:
+        exp_001:
+          universe: ["rb", "i", "ag"]
+          split: "walk_forward"
+          cost_model: "default_cn_futures"
+          publish_target: "factor_candidate"
+      publish_records:
+        - experiment_id: "exp_001"
+          status: "candidate"
+          target: "workspace.default.factor_board"
+          confirmed: false
+```
+
+说明：
+- `research` 用于描述因子定义、标签定义、实验配置和研究发布记录。
+- 研究配置属于构建态资产，不得直接等同于运行态正式对象。
+- `publish_records` 用于记录研究候选对象的发布状态、目标范围和确认结果。
+- 研究配置必须支持复跑、导出、迁移和审计。
+
+### 4.6 工作区配置
 
 ```yaml
 workspace:
@@ -195,7 +259,7 @@ def migrate_config(data: dict, from_version: str, to_version: str) -> dict: ...
 ### 7.1 根要求
 
 - 根对象必须显式声明模块命名空间。
-- `system`、`market`、`rules`、`indicator`、`workspace` 应具备独立 schema。
+- `system`、`market`、`rules`、`indicator`、`research`、`workspace` 应具备独立 schema。
 - 各配置段必须禁止未声明字段。
 - schema 只负责结构正确性，业务语义由业务校验补充。
 
@@ -230,11 +294,10 @@ def migrate_config(data: dict, from_version: str, to_version: str) -> dict: ...
             "max_tokens": {"type": "integer"},
             "timeout": {"type": "integer"},
             "temperature": {"type": "number"},
-            "enable_copilot": {"type": "boolean"},
-            "enable_signal_generation": {"type": "boolean"},
-            "enable_risk_check": {"type": "boolean"},
-            "enable_backtest_analysis": {"type": "boolean"},
-            "enable_auto_tuning": {"type": "boolean"}
+            "features": {"type": "object"},
+            "external_context": {"type": "object"},
+            "memory": {"type": "object"},
+            "apply_policy": {"type": "object"}
           },
           "additionalProperties": false
         }
@@ -251,6 +314,8 @@ def migrate_config(data: dict, from_version: str, to_version: str) -> dict: ...
 - 配置载入：YAML -> dict
 - 结构校验：JSON Schema
 - 业务校验：Pydantic / 自定义 validator
+- AI 候选产物校验：schema / 类型检查 / 最小运行检查 / 来源保留检查
+- 研究配置校验：因子定义合法、实验配置可复跑、发布记录与确认状态一致
 - UI 工作区合法性校验：布局合法、联动组合法、面板类型合法
 - 最终装载：通过 MainEngine 统一装配
 
@@ -269,4 +334,7 @@ def migrate_config(data: dict, from_version: str, to_version: str) -> dict: ...
 - 指标参数边界测试
 - session 模板合法性测试
 - 工作区布局配置兼容性测试
+- 研究配置迁移与发布记录一致性测试
 - `ui_backend` 与 `bridge` 配置装载测试
+- AI 外部上下文策略与记忆策略配置装载测试
+- AI 候选产物确认策略配置装载测试
