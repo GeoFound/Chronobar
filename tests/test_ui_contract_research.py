@@ -58,7 +58,9 @@ def test_research_publish_candidate_maps_to_ui_bridge_protocol_and_error_codes()
     assert research_publish_candidate["status"] == "pending_confirmation"
     assert research_publish_candidate["validation"]["ok"] is True
     assert "confirmation_required" in research_publish_candidate["validation"]["checks"]
-    assert research_publish_candidate["target"]["publish_target"] == "workspace.default.factor_board"
+    assert (
+        research_publish_candidate["target"]["publish_target"] == "workspace.default.factor_board"
+    )
 
     assert "QUERY_INVALID_PARAMS" in error_codes
     assert "COMMAND_INVALID_PARAMS" in error_codes
@@ -88,20 +90,29 @@ def test_research_subscription_sample_maps_to_ui_bridge_protocol_and_error_codes
     assert required_event_fields.issubset(research_subscription_event.keys())
     assert research_subscription_event["event_type"] == "RESEARCH_PUBLISH_STATE_CHANGED"
     assert research_subscription_event["payload"]["current_status"] == "pending_confirmation"
-    assert research_subscription_event["payload"]["publish_target"] == "workspace.default.factor_board"
+    payload_target = research_subscription_event["payload"]["publish_target"]
+    assert payload_target == "workspace.default.factor_board"
 
     assert "SUBSCRIPTION_INVALID_PARAMS" in error_codes
     assert "SUBSCRIPTION_FAILED" in error_codes
 
 
 def test_research_ui_contract_samples_validate_against_schemas() -> None:
+    workspace_sample = "tests/ui_contract/research_workspace.json"
+    workspace_schema = "tests/ui_contract/research_workspace.schema.json"
+    publish_sample = "tests/ui_contract/research_publish_candidate.json"
+    publish_schema = "tests/ui_contract/research_publish_candidate.schema.json"
+    sub_sample = "tests/ui_contract/research_subscription_event.json"
+    sub_schema = "tests/ui_contract/research_subscription_event.schema.json"
+
     schema_pairs = [
-        ("tests/ui_contract/research_workspace.json", "tests/ui_contract/research_workspace.schema.json"),
-        ("tests/ui_contract/research_publish_candidate.json", "tests/ui_contract/research_publish_candidate.schema.json"),
-        ("tests/ui_contract/research_subscription_event.json", "tests/ui_contract/research_subscription_event.schema.json"),
+        (workspace_sample, workspace_schema),
+        (publish_sample, publish_schema),
+        (sub_sample, sub_schema),
     ]
 
     for sample_path, schema_path in schema_pairs:
         validator = Draft202012Validator(_load_json(schema_path))
         errors = sorted(validator.iter_errors(_load_json(sample_path)), key=lambda item: item.path)
-        assert not errors, f"{sample_path} failed schema validation: {[error.message for error in errors]}"
+        error_msgs = [error.message for error in errors]
+        assert not errors, f"{sample_path} failed schema validation: {error_msgs}"

@@ -86,9 +86,12 @@ def test_readme_mentions_m1_baseline_status() -> None:
 def test_repository_ai_and_product_ai_boundaries_are_explicit() -> None:
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
     ai_instructions = (REPO_ROOT / "ai-instructions.md").read_text(encoding="utf-8")
-    engineering_baseline = (REPO_ROOT / "docs/engineering/engineering_baseline.md").read_text(encoding="utf-8")
-    product_contract = (REPO_ROOT / "docs/system/ai_assistant_product_contract.md").read_text(encoding="utf-8")
-    ai_architecture = (REPO_ROOT / "docs/system/ai_assistant_architecture.md").read_text(encoding="utf-8")
+    eng_baseline_path = REPO_ROOT / "docs/engineering/engineering_baseline.md"
+    engineering_baseline = eng_baseline_path.read_text(encoding="utf-8")
+    prod_contract_path = REPO_ROOT / "docs/system/ai_assistant_product_contract.md"
+    product_contract = prod_contract_path.read_text(encoding="utf-8")
+    ai_arch_path = REPO_ROOT / "docs/system/ai_assistant_architecture.md"
+    ai_architecture = ai_arch_path.read_text(encoding="utf-8")
 
     assert "产品 AI" in readme
     assert "仓库 AI" in readme
@@ -104,9 +107,11 @@ def test_repository_ai_and_product_ai_boundaries_are_explicit() -> None:
 
 def test_long_term_platform_foundations_are_explicit() -> None:
     architecture = (REPO_ROOT / "docs/system/architecture.md").read_text(encoding="utf-8")
-    engineering_baseline = (REPO_ROOT / "docs/engineering/engineering_baseline.md").read_text(encoding="utf-8")
+    eng_baseline_path = REPO_ROOT / "docs/engineering/engineering_baseline.md"
+    engineering_baseline = eng_baseline_path.read_text(encoding="utf-8")
     roadmap = (REPO_ROOT / "docs/roadmap.md").read_text(encoding="utf-8")
-    delivery_master_plan = (REPO_ROOT / "docs/engineering/delivery_master_plan.md").read_text(encoding="utf-8")
+    delivery_plan_path = REPO_ROOT / "docs/engineering/delivery_master_plan.md"
+    delivery_master_plan = delivery_plan_path.read_text(encoding="utf-8")
 
     # Architecture should have long-term foundation sections
     assert "4.5 对象关系与资产图谱" in architecture
@@ -137,11 +142,20 @@ def test_long_term_platform_foundations_are_explicit() -> None:
     assert "Regional Market / Compliance Abstraction Contract" in engineering_baseline
 
     # Roadmap should mention these as M1 deliverables
-    assert "架构文档已明确 Artifact Graph、状态机、证据包、变更集、能力注册表、策略数据化、迁移/重放与存储边界等长期平台基础契约" in roadmap
-    assert "工程基线已明确仓库 AI 长期协作原则与结构稳定性要求，并列出必须逐步形成的正式契约族" in roadmap
+    assert (
+        "架构文档已明确 Artifact Graph、状态机、证据包、变更集、"
+        "能力注册表、策略数据化、迁移/重放与存储边界等长期平台基础契约"
+    ) in roadmap
+    assert (
+        "工程基线已明确仓库 AI 长期协作原则与结构稳定性要求，并列出必须逐步形成的正式契约族"
+    ) in roadmap
 
     # Delivery master plan should include these as P0 goals
-    assert "明确仓库 AI 与产品 AI 的边界，并长期把对象模型、状态机、证据包、能力注册表、策略数据化、迁移契约与存储边界等基础能力写成正式契约" in delivery_master_plan
+    assert (
+        "明确仓库 AI 与产品 AI 的边界，并长期把对象模型、状态机、"
+        "证据包、能力注册表、策略数据化、迁移契约与存储边界等"
+        "基础能力写成正式契约"
+    ) in delivery_master_plan
 
 
 def test_ui_contract_examples_match_protocol_baseline() -> None:
