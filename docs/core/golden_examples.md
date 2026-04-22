@@ -8,7 +8,7 @@
 
 **关键依赖版本：**
 - pydantic>=2.5,<3
-- pyarrow>=14.0,<15
+- pyarrow>=23.0,<24
 - typing-extensions>=4.9,<5
 
 **数据模型约定：**

@@ -37,6 +37,9 @@ def test_required_baseline_files_exist() -> None:
         "config/schemas/rules.schema.json",
         "config/schemas/indicator.schema.json",
         "config/schemas/workspace.schema.json",
+        "docs/engineering/current_phase_and_truth_source.md",
+        "docs/engineering/runtime_nonfunctional_baseline.md",
+        "docs/system/storage_lifecycle_and_recovery.md",
         "tests/ui_contract/query_response.json",
         "tests/ui_contract/subscription_event.json",
         "tests/ui_contract/error_codes.json",
@@ -63,10 +66,11 @@ def test_default_configs_validate_against_schemas() -> None:
         )
 
 
-def test_readme_mentions_p1_completion_status() -> None:
+def test_readme_mentions_m1_baseline_status() -> None:
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
-    # Check for P1 completion status
-    assert "P1 核心闭环完成" in readme
+    assert "当前状态：M1 基线收敛" in readme
+    assert "current_phase_and_truth_source.md" in readme
+    assert "P1 核心闭环完成" not in readme
 
 
 def test_ui_contract_examples_match_protocol_baseline() -> None:

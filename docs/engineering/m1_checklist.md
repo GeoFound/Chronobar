@@ -50,7 +50,10 @@ M1 验收标准参考 `engineering/engineering_baseline.md` 第14节定义：
 - [ ] `docs/system/config_protocol.md`
 - [ ] `docs/core/plugin_protocol.md`
 - [ ] `docs/engineering/engineering_baseline.md`
+- [ ] `docs/engineering/current_phase_and_truth_source.md`
+- [ ] `docs/engineering/runtime_nonfunctional_baseline.md`
 - [ ] `docs/system/ui_bridge_protocol.md`
+- [ ] `docs/system/storage_lifecycle_and_recovery.md`
 - [ ] `README.md`
 
 检查项：
@@ -59,6 +62,8 @@ M1 验收标准参考 `engineering/engineering_baseline.md` 第14节定义：
 - [ ] 文档之间无明显冲突
 - [ ] React 展示层路线与 Python 核心路线描述一致
 - [ ] M1、M2、M3 里程碑定义一致
+- [ ] 当前正式阶段与真相源优先级说明一致
+- [ ] 范围冻结、非功能基线与恢复路径已成文
 
 ---
 

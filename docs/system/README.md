@@ -7,6 +7,7 @@
 - **architecture.md** - 系统架构设计（七层架构、主引擎协调模式、实时/回放主流程、依赖方向约束）
 - **config_protocol.md** - 系统配置管理（系统/市场/规则/指标/工作区配置、schema 校验、migration 规则）
 - **ui_bridge_protocol.md** - 前后端协作边界（Query API、Command API、Subscription API、状态同步、错误模型）
+- **storage_lifecycle_and_recovery.md** - 本地数据生命周期、目录语义、备份/恢复与损坏处理设计
 
 ## 层级归属
 
